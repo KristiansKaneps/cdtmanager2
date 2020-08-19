@@ -1,0 +1,9 @@
+.idea
+*.iml
+out
+gen
+build
+.gradle
+local.properties
+META-INF
+classes

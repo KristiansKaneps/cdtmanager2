@@ -1,0 +1,57 @@
+plugins {
+	id 'java'
+	id 'idea'
+}
+
+subprojects {
+	if("android".equalsIgnoreCase(project.getName()))
+	{
+		repositories {
+			mavenCentral()
+			google()
+			jcenter()
+			maven { url 'https://jitpack.io' }
+		}
+
+		buildscript {
+			repositories {
+				mavenCentral()
+				jcenter()
+				google()
+				maven { url 'https://jitpack.io' }
+			}
+
+			dependencies {
+				classpath 'com.android.tools.build:gradle:4.0.0'
+			}
+		}
+	} else if(project.getName().endsWith("firmware")) {
+
+	} else {
+		apply plugin: 'java'
+		apply plugin: 'idea'
+		if(!project.getName().endsWith("api") && project.getName() != "common")
+			apply plugin: 'application'
+
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		version = '1.0'
+
+		test {
+			useJUnit()
+			maxHeapSize = '1G'
+		}
+
+		repositories {
+			mavenCentral()
+			jcenter()
+			google()
+			maven { url 'https://jitpack.io' }
+			maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/' }
+		}
+
+		dependencies {
+			testImplementation 'junit:junit:4.12'
+			testImplementation 'org.mockito:mockito-core:3.2.4'
+		}
+	}
+}

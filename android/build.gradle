@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+android {
+	compileOptions {
+		sourceCompatibility JavaVersion.VERSION_1_8
+		targetCompatibility JavaVersion.VERSION_1_8
+	}
+
+	compileSdkVersion 28
+	buildToolsVersion "29.0.3"
+
+	defaultConfig {
+		applicationId "lv.cecilutaka.cdtmanager2.android"
+		minSdkVersion 27
+		targetSdkVersion 28
+		versionCode 1
+		versionName "1.1"
+
+		testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+		resValue "string", "GOOGLE_MAPS_API_KEY", properties.getProperty("google.maps.key", "")
+	}
+
+	buildTypes {
+		release {
+			minifyEnabled true
+			proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+		}
+		debug {
+			minifyEnabled false
+			proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+		}
+	}
+
+	packagingOptions {
+		pickFirst "META-INF/native-image/io.netty/codec-http2/native-image.properties"
+		pickFirst "META_INF/native/libnetty_resolver_dns_native_macos_x86_64.jnilib"
+		pickFirst "META-INF/INDEX.LIST"
+		pickFirst "META-INF/native/libnetty_resolver_dns_native_macos_x86_64.jnilib"
+		pickFirst "META-INF/native-image/io.netty/buffer/native-image.properties"
+		pickFirst "META-INF/native-image/io.netty/codec-http/native-image.properties"
+		pickFirst "META-INF/native/libnetty_transport_native_kqueue_x86_64.jnilib"
+		pickFirst "META-INF/native-image/io.netty/transport/reflection-config.json"
+		pickFirst "META-INF/native-image/io.netty/handler/native-image.properties"
+		pickFirst "META-INF/io.netty.versions.properties"
+		pickFirst "META-INF/native-image/io.netty/transport/native-image.properties"
+		pickFirst "META-INF/native-image/io.netty/common/native-image.properties"
+		pickFirst "javax/annotation/*.java"
+		pickFirst "javax/annotation/meta/*.java"
+		pickFirst "javax/annotation/concurrent/*.java"
+		pickFirst "org/intellij/lang/annotations/*.java"
+	}
+}
+
+dependencies {
+	implementation project(':common'), project(':api')
+	implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+	implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+	implementation 'com.android.support:appcompat-v7:28.0.0'
+	implementation 'com.android.support:support-v4:28.0.0'
+	implementation 'com.android.support:design:28.0.0'
+	implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+	implementation 'com.android.support:recyclerview-v7:28.0.0'
+
+	implementation 'android.arch.navigation:navigation-fragment:1.0.0'
+	implementation 'android.arch.navigation:navigation-ui:1.0.0'
+	implementation 'android.arch.lifecycle:extensions:1.1.1'
+	testImplementation 'junit:junit:4.12'
+	androidTestImplementation 'com.android.support.test:runner:1.0.2'
+	androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}

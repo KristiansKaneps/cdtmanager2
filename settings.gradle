@@ -1,0 +1,2 @@
+rootProject.name = "cdtmanager2"
+include ':api', ':common', ':server', ':android'
