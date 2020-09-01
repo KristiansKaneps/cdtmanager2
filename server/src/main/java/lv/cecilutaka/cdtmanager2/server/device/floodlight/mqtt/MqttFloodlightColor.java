@@ -9,7 +9,7 @@ import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.Server;
 import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
-@ConsumeMqttMessage(subscriptionId = 6)
+@ConsumeMqttMessage(subscriptionId = 10)
 public class MqttFloodlightColor extends MqttFloodlightMessageConsumer
 {
 	@Override
@@ -22,7 +22,7 @@ public class MqttFloodlightColor extends MqttFloodlightMessageConsumer
 
 		DeviceType deviceType = DeviceType.fromInstance(registeredFloodlight.get());
 
-		if(DeviceType.RGB_FLOODLIGHT != deviceType)
+		if(DeviceType.RGB_FLOODLIGHT != deviceType && DeviceType.RGB_MATRIX != deviceType)
 		{
 			Log.w("Floodlight", "Floodlight #" + floodlightId + " tried to send color data, but it's type is " + deviceType.name() + ". Ignoring this message.");
 			return;

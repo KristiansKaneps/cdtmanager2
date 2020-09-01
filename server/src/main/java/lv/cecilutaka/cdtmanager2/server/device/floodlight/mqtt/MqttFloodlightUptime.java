@@ -9,15 +9,15 @@ import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
 import java.nio.charset.StandardCharsets;
 
-@ConsumeMqttMessage(subscriptionId = 5)
+@ConsumeMqttMessage(subscriptionId = 1)
 public class MqttFloodlightUptime extends MqttFloodlightMessageConsumer
 {
 	@Override
 	protected void consume(Server server, Mqtt5Publish publish, String mqttFloodlightId, int floodlightId, RegistryValue<IFloodlight> registeredFloodlight) throws Exception
 	{
-		byte[] payload = publish.getPayloadAsBytes();
-
 		if(registeredFloodlight.isEmpty()) return;
+
+		byte[] payload = publish.getPayloadAsBytes();
 
 		int uptimeInSeconds = Integer.parseInt(new String(payload, StandardCharsets.UTF_8));
 

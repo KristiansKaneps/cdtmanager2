@@ -43,11 +43,11 @@ public abstract class MqttFloodlightMessageConsumer implements MqttLocalMessageC
 	@Override
 	public final Object[] parseTopicLevels(Server server, List<String> topicLevels)
 	{
-		if(topicLevels.size() < 2) return null;
+		if(topicLevels.size() < 3) return null;
 
 		try
 		{
-			String mqttFloodlightId = topicLevels.get(1);
+			String mqttFloodlightId = topicLevels.get(2);
 			int floodlightId = server.getMqttFloodlightUtils().toFloodlightId(mqttFloodlightId);
 			return new Object[]{ mqttFloodlightId, floodlightId };
 		}

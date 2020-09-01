@@ -1,22 +1,23 @@
 package lv.cecilutaka.cdtmanager2.common.device;
 
+import lv.cecilutaka.cdtmanager2.api.common.device.DeviceType;
 import lv.cecilutaka.cdtmanager2.api.common.device.IFirmwareInfo;
 
 public class FirmwareInfo implements IFirmwareInfo
 {
-	private final int firmwareId;
+	private final DeviceType firmwareType;
 	private final String firmware;
 
-	public FirmwareInfo(int firmwareId, String firmware)
+	public FirmwareInfo(DeviceType firmwareType, String firmware)
 	{
-		this.firmwareId = firmwareId;
+		this.firmwareType = firmwareType;
 		this.firmware = firmware;
 	}
 
 	@Override
-	public int getFirmwareId()
+	public DeviceType getFirmwareType()
 	{
-		return firmwareId;
+		return firmwareType;
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class FirmwareInfo implements IFirmwareInfo
 	@Override
 	public String toString()
 	{
-		return "FirmwareInfo(0x" + Integer.toHexString(firmwareId) + ": " + firmware + ")";
+		return "FirmwareInfo(" + firmwareType.name() + ": " + firmware + ")";
 	}
 
 	@Override
@@ -38,7 +39,7 @@ public class FirmwareInfo implements IFirmwareInfo
 		if(obj instanceof IFirmwareInfo)
 		{
 			IFirmwareInfo fw = (IFirmwareInfo) obj;
-			return fw.getFirmwareId() == firmwareId && firmware != null && firmware.equals(fw.getFirmware());
+			return fw.getFirmwareType() == firmwareType && firmware != null && firmware.equals(fw.getFirmware());
 		}
 		return false;
 	}

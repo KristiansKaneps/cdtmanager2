@@ -1,5 +1,7 @@
 package lv.cecilutaka.cdtmanager2.api.common.device;
 
+import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IBridge;
+import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IRGBFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.device.matrix.IRGBMatrix;
@@ -9,6 +11,9 @@ import lv.cecilutaka.cdtmanager2.api.common.device.matrix.IRGBMatrix;
  */
 public enum DeviceType
 {
+	RELAY(IRelay.class),
+	BRIDGE(IBridge.class),
+
 	MONO_FLOODLIGHT(IFloodlight.class),
 	RGB_FLOODLIGHT(IRGBFloodlight.class),
 	RGB_MATRIX(IRGBMatrix.class),
