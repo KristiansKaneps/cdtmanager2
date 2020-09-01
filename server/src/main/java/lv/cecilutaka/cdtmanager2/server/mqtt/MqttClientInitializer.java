@@ -24,9 +24,7 @@ public class MqttClientInitializer implements IMqttConnectionListener
 
 		client.subscribe("fo/fw/+", MqttQos.EXACTLY_ONCE, 0); // connect or firmware (global)
 
-		client.subscribe("fo/u/+", MqttQos.EXACTLY_ONCE, 1); // uptime (floodlight)
-		client.subscribe("bo/u/+", MqttQos.EXACTLY_ONCE, 2); // uptime (bridge)
-		client.subscribe("ro/u/+", MqttQos.EXACTLY_ONCE, 3); // uptime (relay)
+		client.subscribe("fo/u/+", MqttQos.EXACTLY_ONCE, 1); // uptime (global)
 
 		client.subscribe("fo/c/+", MqttQos.EXACTLY_ONCE, 10); // color (floodlight)
 

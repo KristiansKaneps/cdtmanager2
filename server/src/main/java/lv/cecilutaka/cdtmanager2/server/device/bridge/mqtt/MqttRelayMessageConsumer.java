@@ -48,7 +48,7 @@ public abstract class MqttRelayMessageConsumer implements MqttLocalMessageConsum
 		try
 		{
 			String mqttRelayId = topicLevels.get(2);
-			int relayId = server.getMqttRelayUtils().toRelayId(mqttRelayId);
+			int relayId = server.getMqttUtils().toRelayId(mqttRelayId);
 			return new Object[]{ mqttRelayId, relayId };
 		}
 		catch(MqttIdException e)

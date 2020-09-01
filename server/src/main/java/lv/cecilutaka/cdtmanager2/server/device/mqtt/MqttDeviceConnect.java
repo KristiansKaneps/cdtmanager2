@@ -66,13 +66,15 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 	{
 		DeviceType type = DeviceType.fromFirmwareId(fwId);
 
+		server.getMqttDeviceTypeRegistry().register(mqttId, type);
+
 		try
 		{
 			switch (type)
 			{
 				case RELAY:
 				{
-					int relayId = server.getMqttRelayUtils().toRelayId(mqttId);
+					int relayId = server.getMqttUtils().toRelayId(mqttId);
 					RegistryValue<IRelay> regValue = server.getRelayRegistry().get(relayId);
 					IRelay relay;
 
@@ -93,7 +95,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				}
 				case BRIDGE:
 				{
-					int bridgeId = server.getMqttBridgeUtils().toBridgeId(mqttId);
+					int bridgeId = server.getMqttUtils().toBridgeId(mqttId);
 					RegistryValue<IBridge> regValue = server.getBridgeRegistry().get(bridgeId);
 					IBridge bridge;
 
@@ -114,7 +116,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				}
 				case MONO_FLOODLIGHT:
 				{
-					int floodlightId = server.getMqttFloodlightUtils().toFloodlightId(mqttId);
+					int floodlightId = server.getMqttUtils().toFloodlightId(mqttId);
 					RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(floodlightId);
 					IFloodlight floodlight;
 
@@ -135,7 +137,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				}
 				case RGB_FLOODLIGHT:
 				{
-					int floodlightId = server.getMqttFloodlightUtils().toFloodlightId(mqttId);
+					int floodlightId = server.getMqttUtils().toFloodlightId(mqttId);
 					RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(floodlightId);
 					IRGBFloodlight floodlight;
 
@@ -156,7 +158,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				}
 				case RGB_MATRIX:
 				{
-					int floodlightId = server.getMqttFloodlightUtils().toFloodlightId(mqttId);
+					int floodlightId = server.getMqttUtils().toFloodlightId(mqttId);
 					RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(floodlightId);
 					IRGBMatrix floodlight;
 

@@ -3,8 +3,6 @@ package lv.cecilutaka.cdtmanager2.server;
 import com.typesafe.config.Config;
 
 import lv.cecilutaka.cdtmanager2.api.server.IServer;
-import lv.cecilutaka.cdtmanager2.api.server.mqtt.IMqttBridgeUtils;
-import lv.cecilutaka.cdtmanager2.api.server.mqtt.IMqttRelayUtils;
 import lv.cecilutaka.cdtmanager2.common.StartStopImpl;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.common.threading.Loop;
@@ -13,12 +11,14 @@ import lv.cecilutaka.cdtmanager2.server.config.NetworkMqttConfig;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkRestConfig;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClient;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClientInitializer;
+import lv.cecilutaka.cdtmanager2.server.mqtt.MqttGlobalUtils;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttMessageConsumer;
 import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttBridgeUtils;
 import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttFloodlightUtils;
 import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttRelayUtils;
 import lv.cecilutaka.cdtmanager2.server.registry.BridgeRegistry;
 import lv.cecilutaka.cdtmanager2.server.registry.FloodlightRegistry;
+import lv.cecilutaka.cdtmanager2.server.registry.MqttDeviceTypeRegistry;
 import lv.cecilutaka.cdtmanager2.server.registry.RelayRegistry;
 
 public class Server extends StartStopImpl implements IServer
@@ -27,13 +27,13 @@ public class Server extends StartStopImpl implements IServer
 	private RelayRegistry relayRegistry;
 	private BridgeRegistry bridgeRegistry;
 
+	private MqttDeviceTypeRegistry mqttDeviceTypeRegistry;
+
 	private Loop mqttMessageConsumerLoop;
 	private MqttMessageConsumer mqttMessageConsumer;
 	private MqttClient mqttClient;
 
-	private MqttFloodlightUtils mqttFloodlightUtils;
-	private MqttRelayUtils mqttRelayUtils;
-	private MqttBridgeUtils mqttBridgeUtils;
+	private MqttGlobalUtils mqttUtils;
 
 	private NetworkMqttConfig netMqttConfig;
 	private NetworkRestConfig netRestConfig;
@@ -51,13 +51,17 @@ public class Server extends StartStopImpl implements IServer
 		Log.i("Starting...");
 		long start = System.currentTimeMillis();
 
+		mqttDeviceTypeRegistry = new MqttDeviceTypeRegistry();
+
 		floodlightRegistry = new FloodlightRegistry();
 		relayRegistry = new RelayRegistry();
 		bridgeRegistry = new BridgeRegistry();
 
-		mqttFloodlightUtils = new MqttFloodlightUtils();
-		mqttRelayUtils = new MqttRelayUtils();
-		mqttBridgeUtils = new MqttBridgeUtils();
+		mqttUtils = new MqttGlobalUtils(
+				new MqttRelayUtils(),
+				new MqttBridgeUtils(),
+				new MqttFloodlightUtils()
+		);
 
 		Log.i("Loading config...");
 		Config networkConfig = configLoader.load("network.conf");
@@ -74,9 +78,7 @@ public class Server extends StartStopImpl implements IServer
 		mqttClient = new MqttClient(this);
 		mqttClient.addConnectionListener(new MqttClientInitializer(this));
 
-		mqttFloodlightUtils.initialize();
-		mqttRelayUtils.initialize();
-		mqttBridgeUtils.initialize();
+		mqttUtils.initialize();
 
 		mqttMessageConsumerLoop = new Loop(mqttMessageConsumer = new MqttMessageConsumer(this, false), "CDTManager2 MQTT Message Consumer");
 
@@ -122,21 +124,9 @@ public class Server extends StartStopImpl implements IServer
 	}
 
 	@Override
-	public MqttFloodlightUtils getMqttFloodlightUtils()
+	public MqttGlobalUtils getMqttUtils()
 	{
-		return mqttFloodlightUtils;
-	}
-
-	@Override
-	public MqttRelayUtils getMqttRelayUtils()
-	{
-		return mqttRelayUtils;
-	}
-
-	@Override
-	public MqttBridgeUtils getMqttBridgeUtils()
-	{
-		return mqttBridgeUtils;
+		return mqttUtils;
 	}
 
 	@Override
@@ -155,5 +145,11 @@ public class Server extends StartStopImpl implements IServer
 	public BridgeRegistry getBridgeRegistry()
 	{
 		return bridgeRegistry;
+	}
+
+	@Override
+	public MqttDeviceTypeRegistry getMqttDeviceTypeRegistry()
+	{
+		return mqttDeviceTypeRegistry;
 	}
 }

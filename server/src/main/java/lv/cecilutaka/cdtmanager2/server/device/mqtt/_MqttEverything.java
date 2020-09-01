@@ -1,4 +1,4 @@
-package lv.cecilutaka.cdtmanager2.server.device.floodlight.mqtt;
+package lv.cecilutaka.cdtmanager2.server.device.mqtt;
 
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
