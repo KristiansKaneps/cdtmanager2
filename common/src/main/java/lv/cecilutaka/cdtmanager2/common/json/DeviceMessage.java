@@ -1,7 +1,7 @@
-package lv.cecilutaka.cdtmanager2.common.device.json;
+package lv.cecilutaka.cdtmanager2.common.json;
 
 import lv.cecilutaka.cdtmanager2.api.common.device.DeviceMessageType;
-import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceMessage;
+import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage;
 
 public class DeviceMessage implements IDeviceMessage
 {

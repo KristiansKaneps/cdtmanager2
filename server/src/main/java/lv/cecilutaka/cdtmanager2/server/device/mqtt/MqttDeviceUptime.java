@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import lv.cecilutaka.cdtmanager2.api.common.device.DeviceType;
-import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceUptimeMessage;
+import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceUptimeMessage;
 import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IBridge;
 import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;

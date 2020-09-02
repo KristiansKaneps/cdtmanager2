@@ -2,8 +2,8 @@ package lv.cecilutaka.cdtmanager2.server.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceFirmwareMessage;
-import lv.cecilutaka.cdtmanager2.common.device.json.DeviceFirmwareMessage;
+import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceFirmwareMessage;
+import lv.cecilutaka.cdtmanager2.common.json.DeviceFirmwareMessage;
 
 public class DeviceFirmwareMessageFactory
 {

@@ -1,6 +1,6 @@
-package lv.cecilutaka.cdtmanager2.common.device.json;
+package lv.cecilutaka.cdtmanager2.common.json;
 
-import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceFirmwareMessage;
+import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceFirmwareMessage;
 
 public class DeviceFirmwareMessage implements IDeviceFirmwareMessage
 {

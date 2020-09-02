@@ -1,13 +1,13 @@
 package lv.cecilutaka.cdtmanager2.api.common.device;
 
-import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceMessage;
+import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage;
 
 public interface IDevice
 {
 	IFirmwareInfo getFirmwareInfo();
 	void setFirmwareInfo(IFirmwareInfo firmwareInfo);
 
-	lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceMessage getLastMessage();
+	lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage getLastMessage();
 	void setLastMessage(IDeviceMessage message);
 
 	/**
