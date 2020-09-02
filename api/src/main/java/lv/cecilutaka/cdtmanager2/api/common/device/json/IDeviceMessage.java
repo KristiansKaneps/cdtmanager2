@@ -6,4 +6,6 @@ public interface IDeviceMessage
 {
 	String getMessage();
 	DeviceMessageType getType();
+
+	default DataType getDataType() { return DataType.MESSAGE; }
 }
