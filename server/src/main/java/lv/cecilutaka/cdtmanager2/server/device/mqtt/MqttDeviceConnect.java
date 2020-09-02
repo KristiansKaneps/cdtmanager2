@@ -1,5 +1,7 @@
 package lv.cecilutaka.cdtmanager2.server.device.mqtt;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import lv.cecilutaka.cdtmanager2.api.common.device.DeviceType;
 import lv.cecilutaka.cdtmanager2.api.common.device.IDevice;
@@ -7,10 +9,12 @@ import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IBridge;
 import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IRGBFloodlight;
+import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceFirmwareMessage;
 import lv.cecilutaka.cdtmanager2.api.common.device.matrix.IRGBMatrix;
 import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
 import lv.cecilutaka.cdtmanager2.api.server.mqtt.MqttIdException;
 import lv.cecilutaka.cdtmanager2.common.device.FirmwareInfo;
+import lv.cecilutaka.cdtmanager2.common.device.json.DeviceFirmwareMessage;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.Server;
 import lv.cecilutaka.cdtmanager2.server.device.bridge.Bridge;
@@ -18,6 +22,7 @@ import lv.cecilutaka.cdtmanager2.server.device.bridge.Relay;
 import lv.cecilutaka.cdtmanager2.server.device.floodlight.Floodlight;
 import lv.cecilutaka.cdtmanager2.server.device.floodlight.RGBFloodlight;
 import lv.cecilutaka.cdtmanager2.server.device.matrix.RGBMatrix;
+import lv.cecilutaka.cdtmanager2.server.json.DeviceFirmwareMessageFactory;
 import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
 import java.nio.charset.StandardCharsets;
@@ -28,24 +33,34 @@ import java.nio.charset.StandardCharsets;
 @ConsumeMqttMessage(subscriptionId = 0)
 public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 {
+	private final ObjectMapper mapper = new ObjectMapper();
+
+	public MqttDeviceConnect()
+	{
+		mapper.enable(MapperFeature.USE_ANNOTATIONS);
+	}
+
 	@Override
-	public void consume(Server server, Mqtt5Publish publish, String mqttId)
+	public void consume(Server server, Mqtt5Publish publish, String mqttId) throws Exception
 	{
 		byte[] payload = publish.getPayloadAsBytes();
 		if(payload.length == 0) return;
 
-		String content = new String(payload, StandardCharsets.UTF_8);
+		DeviceFirmwareMessageFactory factory = mapper.readValue(payload, DeviceFirmwareMessageFactory.class);
+		IDeviceFirmwareMessage firmwareMessage = factory.build();
+
+		String firmware = firmwareMessage.getFirmwareMessage();
 
 		int fwIdBegin = 0;
-		int fwIdEnd = content.indexOf(":", fwIdBegin);
+		int fwIdEnd = firmware.indexOf(":", fwIdBegin);
 
-		int fwBegin = content.indexOf(":", fwIdEnd) + 1;
-		int fwEnd = content.length();
+		int fwBegin = firmware.indexOf(":", fwIdEnd) + 1;
+		int fwEnd = firmware.length();
 
 		try
 		{
-			int fwId = Integer.parseInt(content.substring(fwIdBegin, fwIdEnd));
-			String fw = content.substring(fwBegin, fwEnd);
+			int fwId = Integer.parseInt(firmware.substring(fwIdBegin, fwIdEnd));
+			String fw = firmware.substring(fwBegin, fwEnd);
 
 			IDevice device = handleConnectPublish(server, mqttId, fwId, fw);
 			if (device != null) Log.i("Device", "A device connected: " + device.toString());

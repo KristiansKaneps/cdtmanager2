@@ -3,7 +3,7 @@ package lv.cecilutaka.cdtmanager2.server.device.floodlight.mqtt;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
-import lv.cecilutaka.cdtmanager2.api.common.device.IDeviceMessage;
+import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceMessage;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
 import lv.cecilutaka.cdtmanager2.common.log.Log;

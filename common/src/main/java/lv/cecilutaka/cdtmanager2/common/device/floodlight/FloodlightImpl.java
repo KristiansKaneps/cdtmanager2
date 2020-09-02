@@ -1,6 +1,6 @@
 package lv.cecilutaka.cdtmanager2.common.device.floodlight;
 
-import lv.cecilutaka.cdtmanager2.api.common.device.IDeviceMessage;
+import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceMessage;
 import lv.cecilutaka.cdtmanager2.api.common.device.IFirmwareInfo;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 

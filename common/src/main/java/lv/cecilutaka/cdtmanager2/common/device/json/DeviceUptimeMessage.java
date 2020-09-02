@@ -1,6 +1,6 @@
-package lv.cecilutaka.cdtmanager2.common.device;
+package lv.cecilutaka.cdtmanager2.common.device.json;
 
-import lv.cecilutaka.cdtmanager2.api.common.device.IDeviceUptimeMessage;
+import lv.cecilutaka.cdtmanager2.api.common.device.json.IDeviceUptimeMessage;
 
 public class DeviceUptimeMessage implements IDeviceUptimeMessage
 {
