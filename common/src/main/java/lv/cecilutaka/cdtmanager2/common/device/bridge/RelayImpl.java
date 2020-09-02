@@ -6,6 +6,8 @@ import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 
 public class RelayImpl implements IRelay
 {
+	protected long lastUptimeReport;
+
 	protected IDeviceMessage message;
 
 	protected IFirmwareInfo firmwareInfo;
@@ -63,6 +65,13 @@ public class RelayImpl implements IRelay
 	@Override
 	public void setUptime(int seconds)
 	{
+		lastUptimeReport = System.currentTimeMillis();
 		this.uptime = seconds;
+	}
+
+	@Override
+	public long getLastUptimeReport()
+	{
+		return lastUptimeReport;
 	}
 }

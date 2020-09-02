@@ -31,10 +31,9 @@ public class MqttFloodlightMessage extends MqttFloodlightMessageConsumer
 
 		try
 		{
-			DeviceMessageFactory factory = mapper.readValue(payload, DeviceMessageFactory.class);
-
 			if(registeredFloodlight.isEmpty()) return;
 
+			DeviceMessageFactory factory = mapper.readValue(payload, DeviceMessageFactory.class);
 			IDeviceMessage message = factory.build();
 
 			IFloodlight floodlight = registeredFloodlight.get();

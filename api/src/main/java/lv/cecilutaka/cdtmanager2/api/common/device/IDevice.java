@@ -13,4 +13,6 @@ public interface IDevice
 	 */
 	int getUptime();
 	void setUptime(int seconds);
+
+	long getLastUptimeReport();
 }

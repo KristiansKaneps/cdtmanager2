@@ -1,13 +1,17 @@
 package lv.cecilutaka.cdtmanager2.server.device.mqtt;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import lv.cecilutaka.cdtmanager2.api.common.device.DeviceType;
+import lv.cecilutaka.cdtmanager2.api.common.device.IDeviceUptimeMessage;
 import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IBridge;
 import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.Server;
+import lv.cecilutaka.cdtmanager2.server.json.DeviceUptimeFactory;
 import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
 import java.nio.charset.StandardCharsets;
@@ -15,12 +19,22 @@ import java.nio.charset.StandardCharsets;
 @ConsumeMqttMessage(subscriptionId = 1)
 public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 {
+	private final ObjectMapper mapper = new ObjectMapper();
+
+	public MqttDeviceUptime()
+	{
+		mapper.enable(MapperFeature.USE_ANNOTATIONS);
+	}
+
 	@Override
 	protected void consume(Server server, Mqtt5Publish publish, String mqttId) throws Exception
 	{
 		byte[] payload = publish.getPayloadAsBytes();
 
-		int uptimeInSeconds = Integer.parseInt(new String(payload, StandardCharsets.UTF_8));
+		DeviceUptimeFactory factory = mapper.readValue(payload, DeviceUptimeFactory.class);
+		IDeviceUptimeMessage uptimeMsg = factory.build();
+
+		int uptimeInSeconds = uptimeMsg.getUptime();
 
 		RegistryValue<DeviceType> regType = server.getMqttDeviceTypeRegistry().get(mqttId);
 

@@ -6,6 +6,8 @@ import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 
 public class FloodlightImpl implements IFloodlight
 {
+	protected long lastUptimeReport;
+
 	protected IDeviceMessage message;
 
 	protected boolean turnedOn;
@@ -76,7 +78,14 @@ public class FloodlightImpl implements IFloodlight
 	@Override
 	public void setUptime(int seconds)
 	{
+		lastUptimeReport = System.currentTimeMillis();
 		this.uptime = seconds;
+	}
+
+	@Override
+	public long getLastUptimeReport()
+	{
+		return lastUptimeReport;
 	}
 
 	protected String _toStringPart0()
