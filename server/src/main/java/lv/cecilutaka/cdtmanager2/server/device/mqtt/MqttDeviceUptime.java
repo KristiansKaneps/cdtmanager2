@@ -14,8 +14,6 @@ import lv.cecilutaka.cdtmanager2.server.Server;
 import lv.cecilutaka.cdtmanager2.server.json.DeviceUptimeFactory;
 import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
-import java.nio.charset.StandardCharsets;
-
 @ConsumeMqttMessage(subscriptionId = 1)
 public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 {
