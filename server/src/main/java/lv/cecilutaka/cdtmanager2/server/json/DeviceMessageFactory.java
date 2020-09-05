@@ -3,17 +3,18 @@ package lv.cecilutaka.cdtmanager2.server.json;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lv.cecilutaka.cdtmanager2.api.common.device.DeviceMessageType;
+import lv.cecilutaka.cdtmanager2.api.common.json.DataType;
 import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage;
 import lv.cecilutaka.cdtmanager2.common.json.DeviceMessage;
 
 public class DeviceMessageFactory
 {
-	private int messageTypeId;
+	private int messageTypeId = DataType.MESSAGE.toId();
 	private String message;
 
 	@JsonCreator
 	public DeviceMessageFactory(
-			@JsonProperty(value = "t", required = true) int messageTypeId,
+			@JsonProperty(value = "t", required = false) int messageTypeId,
 			@JsonProperty(value = "m", required = true) String message)
 	{
 		this.messageTypeId = messageTypeId;

@@ -2,17 +2,18 @@ package lv.cecilutaka.cdtmanager2.server.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lv.cecilutaka.cdtmanager2.api.common.json.DataType;
 import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceFirmwareMessage;
 import lv.cecilutaka.cdtmanager2.common.json.DeviceFirmwareMessage;
 
 public class DeviceFirmwareMessageFactory
 {
-	private int msgType;
+	private int msgType = DataType.FIRMWARE_INFO.toId();
 	private String firmwareMsg;
 
 	@JsonCreator
 	public DeviceFirmwareMessageFactory(
-			@JsonProperty(value = "t", required = true) int msgType,
+			@JsonProperty(value = "t", required = false) int msgType,
 			@JsonProperty(value = "d", required = true) String firmwareMsg
 	)
 	{

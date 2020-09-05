@@ -2,17 +2,18 @@ package lv.cecilutaka.cdtmanager2.server.json;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lv.cecilutaka.cdtmanager2.api.common.json.DataType;
 import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceUptimeMessage;
 import lv.cecilutaka.cdtmanager2.common.json.DeviceUptimeMessage;
 
 public class DeviceUptimeFactory
 {
-	private int msgType; // for uptime it's usually 44
+	private int msgType = DataType.UPTIME.toId();
 	private int uptime;
 
 	@JsonCreator
 	public DeviceUptimeFactory(
-			@JsonProperty(value = "t", required = true) int msgType,
+			@JsonProperty(value = "t", required = false) int msgType,
 			@JsonProperty(value = "d", required = true) int uptime
 	)
 	{
