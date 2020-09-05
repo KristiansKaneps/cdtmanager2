@@ -9,6 +9,8 @@ public enum DataType
 	UPTIME,
 	COLOR,
 	COLOR_EFFECT,
+	FVPOOL_CREATE,
+	FVPOOL_SET,
 
 	UNKNOWN;
 
