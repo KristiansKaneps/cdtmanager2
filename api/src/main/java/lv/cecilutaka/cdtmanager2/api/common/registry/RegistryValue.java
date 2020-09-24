@@ -33,6 +33,12 @@ public class RegistryValue<T>
 		return value;
 	}
 
+	@SuppressWarnings("unchecked")
+	public <C> C as()
+	{
+		return (C) get();
+	}
+
 	public void set(T value)
 	{
 		this.value = value;
