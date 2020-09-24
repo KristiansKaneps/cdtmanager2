@@ -8,6 +8,7 @@ import lv.cecilutaka.cdtmanager2.common.json.DeviceUptimeMessage;
 
 public class DeviceUptimeFactory
 {
+	@Deprecated
 	private int msgType = DataType.UPTIME.toId();
 	private int uptime;
 
@@ -26,6 +27,7 @@ public class DeviceUptimeFactory
 		return new DeviceUptimeMessage(uptime);
 	}
 
+	@Deprecated
 	@JsonProperty("t")
 	public void setMessageType(int msgType)
 	{
@@ -38,6 +40,7 @@ public class DeviceUptimeFactory
 		this.uptime = uptime;
 	}
 
+	@Deprecated
 	public int getMessageType()
 	{
 		return msgType;

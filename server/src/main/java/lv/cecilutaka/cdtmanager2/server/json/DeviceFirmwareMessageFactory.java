@@ -8,6 +8,7 @@ import lv.cecilutaka.cdtmanager2.common.json.DeviceFirmwareMessage;
 
 public class DeviceFirmwareMessageFactory
 {
+	@Deprecated
 	private int msgType = DataType.FIRMWARE_INFO.toId();
 	private String firmwareMsg;
 
@@ -26,6 +27,7 @@ public class DeviceFirmwareMessageFactory
 		return new DeviceFirmwareMessage(firmwareMsg);
 	}
 
+	@Deprecated
 	@JsonProperty("t")
 	public void setMessageType(int msgType)
 	{
@@ -38,6 +40,7 @@ public class DeviceFirmwareMessageFactory
 		this.firmwareMsg = firmwareMsg;
 	}
 
+	@Deprecated
 	public int getMessageType()
 	{
 		return msgType;

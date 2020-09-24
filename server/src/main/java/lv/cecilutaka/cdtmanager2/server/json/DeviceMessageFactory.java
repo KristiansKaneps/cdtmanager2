@@ -9,6 +9,7 @@ import lv.cecilutaka.cdtmanager2.common.json.DeviceMessage;
 
 public class DeviceMessageFactory
 {
+	@Deprecated
 	private int messageTypeId = DataType.MESSAGE.toId();
 	private String message;
 
@@ -26,12 +27,14 @@ public class DeviceMessageFactory
 		return new DeviceMessage(message, DeviceMessageType.fromTypeId(messageTypeId));
 	}
 
+	@Deprecated
 	@JsonProperty("t")
 	public void setMessageTypeId(int messageTypeId)
 	{
 		this.messageTypeId = messageTypeId;
 	}
 
+	@Deprecated
 	public void setMessageType(DeviceMessageType messageType)
 	{
 		this.messageTypeId = messageType.getTypeId();
@@ -43,11 +46,13 @@ public class DeviceMessageFactory
 		this.message = message;
 	}
 
+	@Deprecated
 	public int getMessageTypeId()
 	{
 		return messageTypeId;
 	}
 
+	@Deprecated
 	public DeviceMessageType getMessageType()
 	{
 		return DeviceMessageType.fromTypeId(messageTypeId);
