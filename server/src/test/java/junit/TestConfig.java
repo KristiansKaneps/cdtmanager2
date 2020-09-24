@@ -4,7 +4,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkMqttConfig;
-import lv.cecilutaka.cdtmanager2.server.config.NetworkRestConfig;
+import lv.cecilutaka.cdtmanager2.server.config.NetworkHttpConfig;
 import org.junit.Test;
 
 public class TestConfig
@@ -17,7 +17,7 @@ public class TestConfig
 		assert config != null;
 
 		NetworkMqttConfig netMqttConfig = ConfigBeanFactory.create(config.getConfig("mqtt"), NetworkMqttConfig.class);
-		NetworkRestConfig netRestConfig = ConfigBeanFactory.create(config.getConfig("rest"), NetworkRestConfig.class);
+		NetworkHttpConfig netRestConfig = ConfigBeanFactory.create(config.getConfig("rest"), NetworkHttpConfig.class);
 
 		assert netMqttConfig != null;
 		assert netRestConfig != null;
