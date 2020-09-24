@@ -74,4 +74,20 @@ public class RelayImpl implements IRelay
 	{
 		return lastUptimeReport;
 	}
+
+	protected String _toStringPart0()
+	{
+		return "Relay";
+	}
+
+	protected String _toStringPart1()
+	{
+		return "(#" + id + ": " + firmwareInfo + ")";
+	}
+
+	@Override
+	public String toString()
+	{
+		return _toStringPart0() + _toStringPart1();
+	}
 }

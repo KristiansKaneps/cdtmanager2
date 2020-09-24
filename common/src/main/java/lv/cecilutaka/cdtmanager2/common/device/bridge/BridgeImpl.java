@@ -8,4 +8,10 @@ public class BridgeImpl extends RelayImpl implements IBridge
 	{
 		super(id);
 	}
+
+	@Override
+	protected String _toStringPart0()
+	{
+		return "Bridge";
+	}
 }
