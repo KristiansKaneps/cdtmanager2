@@ -62,7 +62,7 @@ public class DeviceResource
 	 */
 	public void read(Request request, Response response)
 	{
-		Log.d("REST", "Request from " + request.getRemoteAddress() + ": [" + request.getHttpMethod() + "]" + request.getPath());
+		Log.d("REST", "Request from " + request.getRemoteAddress() + ": [" + request.getHttpMethod() + "] " + request.getPath());
 		Server s = app.getServerInstance();
 
 		response.setSerializationSettings(serialization.get());
