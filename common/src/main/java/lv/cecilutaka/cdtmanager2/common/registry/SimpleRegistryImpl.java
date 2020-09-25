@@ -43,6 +43,12 @@ public class SimpleRegistryImpl<K, V> implements IRegistry<K, V>
 	}
 
 	@Override
+	public boolean contains(K key)
+	{
+		return map.containsKey(key);
+	}
+
+	@Override
 	public synchronized Set<K> getKeySet()
 	{
 		return Collections.unmodifiableSet(map.keySet());
