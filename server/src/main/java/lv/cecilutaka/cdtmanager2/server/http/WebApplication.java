@@ -46,7 +46,8 @@ public class WebApplication
 		this.rgbMatrixUri = config.getRgbMatrixUri();
 
 		server = new RestExpress();
-
+		server.noSystemOut();
+		//server.useTcpNoDelay();
 		server.setExecutorThreadCount(executorThreadCount);
 
 		final HttpMethod[] httpMethods = this.httpMethods.stream().map(HttpMethod::valueOf).toArray(HttpMethod[]::new);
