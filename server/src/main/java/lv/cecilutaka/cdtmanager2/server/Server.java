@@ -103,6 +103,7 @@ public class Server extends StartStopImpl implements IServer
 		mqttClient.connect();
 
 		Log.i("Starting HTTP web server for REST.");
+		java.util.logging.Logger.getLogger("io.netty").setLevel(java.util.logging.Level.SEVERE); // disable netty logger
 		webApp = WebApplication.createWebApplication(this, netWebServiceConfig);
 		webApp.start();
 
