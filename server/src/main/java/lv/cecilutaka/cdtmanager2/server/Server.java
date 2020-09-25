@@ -8,7 +8,7 @@ import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.common.threading.Loop;
 import lv.cecilutaka.cdtmanager2.server.config.ConfigLoader;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkMqttConfig;
-import lv.cecilutaka.cdtmanager2.server.config.NetworkRestConfig;
+import lv.cecilutaka.cdtmanager2.server.config.NetworkWebServiceConfig;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClient;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClientInitializer;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttGlobalUtils;
@@ -16,16 +16,17 @@ import lv.cecilutaka.cdtmanager2.server.mqtt.MqttMessageConsumer;
 import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttBridgeUtils;
 import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttFloodlightUtils;
 import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttRelayUtils;
-import lv.cecilutaka.cdtmanager2.server.registry.BridgeRegistry;
-import lv.cecilutaka.cdtmanager2.server.registry.FloodlightRegistry;
-import lv.cecilutaka.cdtmanager2.server.registry.MqttDeviceTypeRegistry;
-import lv.cecilutaka.cdtmanager2.server.registry.RelayRegistry;
+import lv.cecilutaka.cdtmanager2.server.registry.*;
+import lv.cecilutaka.cdtmanager2.server.http.WebApplication;
+
+import java.util.Arrays;
 
 public class Server extends StartStopImpl implements IServer
 {
 	private FloodlightRegistry floodlightRegistry;
 	private RelayRegistry relayRegistry;
 	private BridgeRegistry bridgeRegistry;
+	private DeviceReadOnlyRegistry _deviceReadOnlyRegistry;
 
 	private MqttDeviceTypeRegistry mqttDeviceTypeRegistry;
 
@@ -36,9 +37,11 @@ public class Server extends StartStopImpl implements IServer
 	private MqttGlobalUtils mqttUtils;
 
 	private NetworkMqttConfig netMqttConfig;
-	private NetworkRestConfig netRestConfig;
+	private NetworkWebServiceConfig netWebServiceConfig;
 
 	private final ConfigLoader configLoader;
+
+	private WebApplication webApp;
 
 	public Server()
 	{
@@ -56,6 +59,12 @@ public class Server extends StartStopImpl implements IServer
 		floodlightRegistry = new FloodlightRegistry();
 		relayRegistry = new RelayRegistry();
 		bridgeRegistry = new BridgeRegistry();
+		_deviceReadOnlyRegistry = new DeviceReadOnlyRegistry();
+
+		_deviceReadOnlyRegistry
+				.addSubRegistry(floodlightRegistry)
+				.addSubRegistry(relayRegistry)
+				.addSubRegistry(bridgeRegistry);
 
 		mqttUtils = new MqttGlobalUtils(
 				new MqttRelayUtils(),
@@ -67,23 +76,35 @@ public class Server extends StartStopImpl implements IServer
 		Config networkConfig = configLoader.load("network.conf");
 
 		netMqttConfig = configLoader.load(networkConfig.getConfig("mqtt"), NetworkMqttConfig.class);
-		netRestConfig = configLoader.load(networkConfig.getConfig("rest"), NetworkRestConfig.class);
+		netWebServiceConfig = configLoader.load(networkConfig.getConfig("webservice"), NetworkWebServiceConfig.class);
+
 		Log.i("Config loaded:");
-		Log.i("MQTT Server Address = " + netMqttConfig.getIp() + ":" + netMqttConfig.getPort());
+		Log.i("MQTT Server Address = " + netMqttConfig.getHostname() + ":" + netMqttConfig.getPort());
 		Log.i("MQTT User = " + netMqttConfig.getUser());
 		Log.i("MQTT Use SSL = " + netMqttConfig.getSsl());
 		if(netMqttConfig.getSsl()) Log.i("MQTT SSL Protocols = " + netMqttConfig.getSslProtocols().toString());
-		Log.i("REST Listening on = " + netRestConfig.getIp() + ":" + netRestConfig.getPort());
+		Log.i("Web Service Response Type = " + netWebServiceConfig.getResponseType());
+		Log.i("Web Service Address = "
+		      + Arrays.toString(netWebServiceConfig.getHttpMethods().toArray(new String[0])) + " "
+		      + netWebServiceConfig.getHostname() + ":" + netWebServiceConfig.getPort() + netWebServiceConfig.getResourceUri()
+		);
 
 		mqttClient = new MqttClient(this);
 		mqttClient.addConnectionListener(new MqttClientInitializer(this));
 
 		mqttUtils.initialize();
 
-		mqttMessageConsumerLoop = new Loop(mqttMessageConsumer = new MqttMessageConsumer(this, false), "CDTManager2 MQTT Message Consumer");
+		mqttMessageConsumerLoop = new Loop(
+				mqttMessageConsumer = new MqttMessageConsumer(this, false),
+				"CDTManager2 MQTT Message Consumer"
+		);
 
 		mqttMessageConsumerLoop.startAsync();
 		mqttClient.connect();
+
+		Log.i("Starting HTTP web server for REST.");
+		webApp = WebApplication.createWebApplication(this, netWebServiceConfig);
+		webApp.start();
 
 		Log.i("Started in " + (System.currentTimeMillis() - start) + " ms.");
 	}
@@ -93,6 +114,7 @@ public class Server extends StartStopImpl implements IServer
 	{
 		Log.i("Stopping...");
 
+		webApp.stop();
 		mqttClient.disconnect();
 		mqttMessageConsumerLoop.stop();
 
@@ -106,9 +128,9 @@ public class Server extends StartStopImpl implements IServer
 	}
 
 	@Override
-	public NetworkRestConfig getNetworkRestConfig()
+	public NetworkWebServiceConfig getNetworkWebServiceConfig()
 	{
-		return netRestConfig;
+		return netWebServiceConfig;
 	}
 
 	@Override
@@ -151,5 +173,10 @@ public class Server extends StartStopImpl implements IServer
 	public MqttDeviceTypeRegistry getMqttDeviceTypeRegistry()
 	{
 		return mqttDeviceTypeRegistry;
+	}
+
+	public DeviceReadOnlyRegistry getDeviceReadOnlyRegistry()
+	{
+		return _deviceReadOnlyRegistry;
 	}
 }
