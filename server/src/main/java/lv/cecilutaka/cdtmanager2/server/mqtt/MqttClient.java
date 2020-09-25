@@ -38,7 +38,7 @@ public class MqttClient implements IMqttClient
 
 		Mqtt5ClientBuilder builder = com.hivemq.client.mqtt.MqttClient.builder()
 		                                      .identifier(UUID.randomUUID().toString())
-		                                      .serverHost(config.getIp())
+		                                      .serverHost(config.getHostname())
 		                                      .serverPort(config.getPort())
 		                                      .automaticReconnect()
 		                                        .initialDelay(config.getAutoReconnectMinDelay(), TimeUnit.SECONDS)
@@ -269,7 +269,7 @@ public class MqttClient implements IMqttClient
 		{
 			connectionListeners.forEach(listener -> listener.onConnected(this));
 		}
-		Log.i("MQTT", "Connected to " + server.getNetworkMqttConfig().getIp() + ":" + server.getNetworkMqttConfig().getPort());
+		Log.i("MQTT", "Connected to " + server.getNetworkMqttConfig().getHostname() + ":" + server.getNetworkMqttConfig().getPort());
 	}
 
 	private void onDisconnected(MqttClientDisconnectedContext context)
@@ -279,6 +279,6 @@ public class MqttClient implements IMqttClient
 		{
 			connectionListeners.forEach(listener -> listener.onDisconnected(this));
 		}
-		Log.i("MQTT", "Disconnected from " + server.getNetworkMqttConfig().getIp() + ":" + server.getNetworkMqttConfig().getPort());
+		Log.i("MQTT", "Disconnected from " + server.getNetworkMqttConfig().getHostname() + ":" + server.getNetworkMqttConfig().getPort());
 	}
 }
