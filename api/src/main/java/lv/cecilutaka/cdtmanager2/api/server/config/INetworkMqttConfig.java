@@ -6,7 +6,7 @@ import java.util.List;
 public interface INetworkMqttConfig extends Serializable
 {
 	int getPort();
-	String getIp();
+	String getHostname();
 	boolean getSsl();
 
 	int getAutoReconnectMinDelay();

@@ -7,7 +7,7 @@ import java.util.List;
 public class NetworkMqttConfig implements INetworkMqttConfig
 {
 	protected int port;
-	protected String ip;
+	protected String hostname;
 	protected boolean ssl;
 
 	protected int autoReconnectMinDelay, autoReconnectMaxDelay;
@@ -21,9 +21,9 @@ public class NetworkMqttConfig implements INetworkMqttConfig
 		this.port = port;
 	}
 
-	public void setIp(String ip)
+	public void setHostname(String hostname)
 	{
-		this.ip = ip;
+		this.hostname = hostname;
 	}
 
 	public void setSsl(boolean ssl)
@@ -63,9 +63,9 @@ public class NetworkMqttConfig implements INetworkMqttConfig
 	}
 
 	@Override
-	public String getIp()
+	public String getHostname()
 	{
-		return ip;
+		return hostname;
 	}
 
 	@Override
