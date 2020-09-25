@@ -5,19 +5,20 @@ dependencies {
 
     implementation "com.typesafe:config:1.4.0"
 
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-core', version: '4.5.3.Final'
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-servlet-initializer', version: '4.5.3.Final'
-    implementation group: 'org.jboss.resteasy', name: 'resteasy-jaxb-provider', version: '4.5.3.Final'
-
     implementation 'com.github.hivemq.hivemq-mqtt-client:hivemq-mqtt-client:develop-SNAPSHOT'
     implementation 'com.github.hivemq.hivemq-mqtt-client:hivemq-mqtt-client-websocket:develop-SNAPSHOT'
     implementation 'com.github.hivemq.hivemq-mqtt-client:hivemq-mqtt-client-proxy:develop-SNAPSHOT'
     implementation 'com.github.hivemq.hivemq-mqtt-client:hivemq-mqtt-client-epoll:develop-SNAPSHOT'
     implementation 'com.github.hivemq.hivemq-mqtt-client:hivemq-mqtt-client-reactor:develop-SNAPSHOT'
 
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.11.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.11.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.11.2'
+
+    implementation group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.13'
+
+    implementation group: 'io.netty', name: 'netty-all', version: '4.1.52.Final'
+    implementation group: 'com.strategicgains', name: 'RestExpress', version: '0.11.3'
 }
 
 sourceSets {
