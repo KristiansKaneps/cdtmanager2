@@ -7,7 +7,7 @@ public interface IDevice
 	IFirmwareInfo getFirmwareInfo();
 	void setFirmwareInfo(IFirmwareInfo firmwareInfo);
 
-	lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage getLastMessage();
+	IDeviceMessage getLastMessage();
 	void setLastMessage(IDeviceMessage message);
 
 	/**
