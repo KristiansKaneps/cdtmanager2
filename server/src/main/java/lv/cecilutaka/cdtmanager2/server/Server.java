@@ -8,6 +8,7 @@ import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.common.threading.Loop;
 import lv.cecilutaka.cdtmanager2.server.config.ConfigLoader;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkMqttConfig;
+import lv.cecilutaka.cdtmanager2.server.config.NetworkMySQLConfig;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkWebServiceConfig;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClient;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClientInitializer;
@@ -38,6 +39,7 @@ public class Server extends StartStopImpl implements IServer
 
 	private NetworkMqttConfig netMqttConfig;
 	private NetworkWebServiceConfig netWebServiceConfig;
+	private NetworkMySQLConfig netMySqlConfig;
 
 	private final ConfigLoader configLoader;
 
@@ -77,6 +79,7 @@ public class Server extends StartStopImpl implements IServer
 
 		netMqttConfig = configLoader.load(networkConfig.getConfig("mqtt"), NetworkMqttConfig.class);
 		netWebServiceConfig = configLoader.load(networkConfig.getConfig("webservice"), NetworkWebServiceConfig.class);
+		netMySqlConfig = configLoader.load(networkConfig.getConfig("mysql"), NetworkMySQLConfig.class);
 
 		Log.i("Config loaded:");
 		Log.i("MQTT Server Address = " + netMqttConfig.getHostname() + ":" + netMqttConfig.getPort());
@@ -88,6 +91,8 @@ public class Server extends StartStopImpl implements IServer
 		      + Arrays.toString(netWebServiceConfig.getHttpMethods().toArray(new String[0])) + " "
 		      + netWebServiceConfig.getHostname() + ":" + netWebServiceConfig.getPort() + netWebServiceConfig.getResourceUri()
 		);
+		Log.i("MySQL Hostname = " + netMySqlConfig.getHostname());
+		Log.i("MySQL Port = " + netMySqlConfig.getPort());
 
 		mqttClient = new MqttClient(this);
 		mqttClient.addConnectionListener(new MqttClientInitializer(this));
@@ -132,6 +137,12 @@ public class Server extends StartStopImpl implements IServer
 	public NetworkWebServiceConfig getNetworkWebServiceConfig()
 	{
 		return netWebServiceConfig;
+	}
+
+	@Override
+	public NetworkMySQLConfig getMySQLConfig()
+	{
+		return netMySqlConfig;
 	}
 
 	@Override

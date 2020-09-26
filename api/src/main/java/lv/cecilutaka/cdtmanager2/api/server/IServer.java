@@ -6,6 +6,7 @@ import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.registry.IRegistry;
 import lv.cecilutaka.cdtmanager2.api.server.config.INetworkMqttConfig;
+import lv.cecilutaka.cdtmanager2.api.server.config.INetworkMySQLConfig;
 import lv.cecilutaka.cdtmanager2.api.server.config.INetworkWebServiceConfig;
 import lv.cecilutaka.cdtmanager2.api.server.mqtt.*;
 
@@ -13,6 +14,7 @@ public interface IServer
 {
 	INetworkMqttConfig getNetworkMqttConfig();
 	INetworkWebServiceConfig getNetworkWebServiceConfig();
+	INetworkMySQLConfig getMySQLConfig();
 
 	IMqttClient getMqttClient();
 	IMqttMessageConsumer getMqttMessageConsumer();
