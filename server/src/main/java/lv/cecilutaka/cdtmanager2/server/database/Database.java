@@ -1,13 +1,11 @@
 package lv.cecilutaka.cdtmanager2.server.database;
 
 import lv.cecilutaka.cdtmanager2.api.server.database.IDatabase;
+import lv.cecilutaka.cdtmanager2.api.server.database.ParameterCallback;
 import lv.cecilutaka.cdtmanager2.server.Server;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkMySQLConfig;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
 
 public class Database implements IDatabase
@@ -18,8 +16,6 @@ public class Database implements IDatabase
 	private static final String TABLE_MONO_FLOODLIGHTS = "mono_floodlights";
 	private static final String TABLE_RGB_FLOODLIGHTS = "rgb_floodlights";
 	private static final String TABLE_RGB_MATRICES = "rgb_matrices";
-
-	private static final String TABLE_UPTIMES = "uptimes";
 
 	private Connection connection;
 
@@ -49,7 +45,8 @@ public class Database implements IDatabase
 		connectionProperties.put("user", user);
 		connectionProperties.put("password", password);
 		DriverManager.getConnection(
-				"jdbc:mysql://" + hostname + ":" + port + "/" + database,
+				"jdbc:mysql://" + hostname + ":" + port + "/" + database
+					+ "?connectTimeout=0&socketTimeout=0&autoReconnect=true",
 				connectionProperties
 		);
 	}
@@ -65,32 +62,37 @@ public class Database implements IDatabase
 	public synchronized void createTables() throws SQLException
 	{
 		_stmt("CREATE TABLE IF NOT EXISTS " + TABLE_DEVICES + "("
-		      + "  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,"
+		      + "  id              INT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
 		      + "  firmware_type   SMALLINT UNSIGNED NOT NULL,"
-		      + "  firmware        VARCHAR(64) NULL,"
+		      + "  firmware        VARCHAR(48) NULL CHARACTER SET ascii COLLATE ascii_general_ci,"
+		      + "  hardware_id     INT UNSIGNED NOT NULL UNIQUE,"
+		      + "  uptime          INT DEFAULT 0,"
+		      + "  connected       BOOL default 0,"
 		      + "  PRIMARY KEY (id)"
 		      + ") ENGINE=INNODB  DEFAULT CHARSET=utf8;"
 		);
 
 		_stmt("CREATE TABLE IF NOT EXISTS " + TABLE_MONO_FLOODLIGHTS + "("
-		      + "  id              INT UNSIGNED NOT NULL,"
+		      + "  id              INT UNSIGNED NOT NULL UNIQUE,"
 		      + "  flags           TINYINT UNSIGNED NOT NULL DEFAULT 0,"
 		      + "  FOREIGN KEY (id) REFERENCES " + TABLE_DEVICES + "(id)"
 		      + ") ENGINE=INNODB  DEFAULT CHARSET=utf8;"
 		);
 
 		_stmt("CREATE TABLE IF NOT EXISTS " + TABLE_RGB_FLOODLIGHTS + "("
-		      + "  id              INT UNSIGNED NOT NULL,"
+		      + "  id              INT UNSIGNED NOT NULL UNIQUE,"
 		      //+ "  flags           TINYINT UNSIGNED NOT NULL DEFAULT 0,"
 		      + "  color           INT UNSIGNED DEFAULT 0,"
+		      + "  fx              TINYINT UNSIGNED DEFAULT 0,"
 		      + "  FOREIGN KEY (id) REFERENCES " + TABLE_DEVICES + "(id)"
 		      + ") ENGINE=INNODB  DEFAULT CHARSET=utf8;"
 		);
 
 		_stmt("CREATE TABLE IF NOT EXISTS " + TABLE_RGB_MATRICES + "("
-		      + "  id              INT UNSIGNED NOT NULL,"
+		      + "  id              INT UNSIGNED NOT NULL UNIQUE,"
 		      //+ "  flags           TINYINT UNSIGNED NOT NULL DEFAULT 0,"
 		      //+ "  color           INT UNSIGNED DEFAULT 0,"
+		      //+ "  fx              TINYINT UNSIGNED DEFAULT 0,"
 		      + "  FOREIGN KEY (id) REFERENCES " + TABLE_DEVICES + "(id)"
 		      + ") ENGINE=INNODB  DEFAULT CHARSET=utf8;"
 		);
@@ -101,6 +103,66 @@ public class Database implements IDatabase
 		Statement stmt = connection.createStatement();
 		stmt.execute(sql);
 		stmt.close();
+	}
+
+	@Override
+	public synchronized ResultSet execute(String query, int parameterLength, ParameterCallback parameterCallback)
+	{
+		try(PreparedStatement stmt = connection.prepareStatement(query))
+		{
+			for(int i = 0; i < parameterLength; i++)
+				parameterCallback.mapParameter(stmt, i);
+			return stmt.executeQuery();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public synchronized void update(String table, String columns, String values, int valueLength, ParameterCallback valueCallback)
+	{
+		final StringBuilder sb = new StringBuilder();
+		sb.append("INSERT INTO ");
+		sb.append(table);
+		sb.append(" (");
+		sb.append(columns);
+		sb.append(") VALUES (");
+		sb.append(values);
+		sb.append(") ON DUPLICATE KEY UPDATE ");
+		if(!columns.contains(", "))
+		{
+			sb.append(columns);
+			sb.append(" = VALUES (");
+			sb.append(columns);
+		}
+		else
+		{
+			String[] columnArr = columns.split(", ");
+			for(int i = 0; i < columnArr.length; i++)
+			{
+				sb.append(columnArr[i]);
+				sb.append(" = VALUES (");
+				sb.append(columnArr[i]);
+				if(i < columnArr.length - 1)
+					sb.append("), ");
+			}
+		}
+		sb.append(");");
+
+		try(PreparedStatement stmt = connection.prepareStatement((sb.toString())))
+		{
+			for(int i = 0; i < valueLength; i++)
+				valueCallback.mapParameter(stmt, i);
+			stmt.executeQuery();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	@Override
