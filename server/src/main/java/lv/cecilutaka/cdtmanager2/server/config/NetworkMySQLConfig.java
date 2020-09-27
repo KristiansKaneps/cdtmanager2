@@ -8,6 +8,7 @@ public class NetworkMySQLConfig implements INetworkMySQLConfig
 	protected int port;
 	protected String user;
 	protected String password;
+	protected String database;
 
 	public void setHostname(String hostname)
 	{
@@ -27,6 +28,11 @@ public class NetworkMySQLConfig implements INetworkMySQLConfig
 	public void setPassword(String password)
 	{
 		this.password = password;
+	}
+
+	public void setDatabase(String database)
+	{
+		this.database = database;
 	}
 
 	@Override
@@ -51,5 +57,11 @@ public class NetworkMySQLConfig implements INetworkMySQLConfig
 	public String getPassword()
 	{
 		return password;
+	}
+
+	@Override
+	public String getDatabase()
+	{
+		return database;
 	}
 }

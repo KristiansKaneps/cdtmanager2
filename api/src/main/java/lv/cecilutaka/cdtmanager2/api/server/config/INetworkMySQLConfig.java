@@ -8,4 +8,5 @@ public interface INetworkMySQLConfig extends Serializable
 	int getPort();
 	String getUser();
 	String getPassword();
+	String getDatabase();
 }
