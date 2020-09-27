@@ -4,11 +4,6 @@ import lv.cecilutaka.cdtmanager2.api.common.device.IDevice;
 
 public interface IFloodlight extends IDevice
 {
-	/**
-	 * @return floodlight's ID
-	 */
-	int getId();
-
 	boolean isTurnedOn();
 	default boolean isTurnedOff() { return !isTurnedOn(); }
 
@@ -16,6 +11,7 @@ public interface IFloodlight extends IDevice
 	 * Should be used only when copying parameters from other floodlight.
 	 * @param id - floodlight ID
 	 */
+	@Override
 	void setId(int id);
 
 	void setTurnedOn(boolean turnedOn);

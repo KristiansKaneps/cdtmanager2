@@ -4,6 +4,18 @@ import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage;
 
 public interface IDevice
 {
+	/**
+	 * @return local ID
+	 */
+	int getId();
+	void setId(int id);
+
+	/**
+	 * @return device's hardware ID
+	 */
+	int getHardwareId();
+	void setHardwareId(int hardwareId);
+
 	IFirmwareInfo getFirmwareInfo();
 	void setFirmwareInfo(IFirmwareInfo firmwareInfo);
 
