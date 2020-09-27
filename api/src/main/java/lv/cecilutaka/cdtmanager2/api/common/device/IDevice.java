@@ -10,12 +10,6 @@ public interface IDevice
 	int getId();
 	void setId(int id);
 
-	/**
-	 * @return device's hardware ID
-	 */
-	int getHardwareId();
-	void setHardwareId(int hardwareId);
-
 	IFirmwareInfo getFirmwareInfo();
 	void setFirmwareInfo(IFirmwareInfo firmwareInfo);
 
