@@ -3,6 +3,7 @@ package lv.cecilutaka.cdtmanager2.server;
 import com.typesafe.config.Config;
 
 import lv.cecilutaka.cdtmanager2.api.server.IServer;
+import lv.cecilutaka.cdtmanager2.api.server.database.IDatabase;
 import lv.cecilutaka.cdtmanager2.common.StartStopImpl;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.common.threading.Loop;
@@ -10,6 +11,7 @@ import lv.cecilutaka.cdtmanager2.server.config.ConfigLoader;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkMqttConfig;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkMySQLConfig;
 import lv.cecilutaka.cdtmanager2.server.config.NetworkWebServiceConfig;
+import lv.cecilutaka.cdtmanager2.server.database.Database;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClient;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClientInitializer;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttGlobalUtils;
@@ -20,6 +22,7 @@ import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttRelayUtils;
 import lv.cecilutaka.cdtmanager2.server.registry.*;
 import lv.cecilutaka.cdtmanager2.server.http.WebApplication;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class Server extends StartStopImpl implements IServer
@@ -44,6 +47,8 @@ public class Server extends StartStopImpl implements IServer
 	private final ConfigLoader configLoader;
 
 	private WebApplication webApp;
+
+	private Database database;
 
 	public Server()
 	{
@@ -93,6 +98,18 @@ public class Server extends StartStopImpl implements IServer
 		);
 		Log.i("MySQL Hostname = " + netMySqlConfig.getHostname());
 		Log.i("MySQL Port = " + netMySqlConfig.getPort());
+
+		try
+		{
+			database = new Database(this, netMySqlConfig);
+			database.connect();
+			database.createTables();
+		}
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+			System.exit(1);
+		}
 
 		mqttClient = new MqttClient(this);
 		mqttClient.addConnectionListener(new MqttClientInitializer(this));
@@ -185,6 +202,12 @@ public class Server extends StartStopImpl implements IServer
 	public MqttDeviceTypeRegistry getMqttDeviceTypeRegistry()
 	{
 		return mqttDeviceTypeRegistry;
+	}
+
+	@Override
+	public Database getDatabase()
+	{
+		return database;
 	}
 
 	public DeviceReadOnlyRegistry getDeviceReadOnlyRegistry()

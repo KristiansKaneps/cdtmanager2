@@ -8,6 +8,7 @@ import lv.cecilutaka.cdtmanager2.api.common.registry.IRegistry;
 import lv.cecilutaka.cdtmanager2.api.server.config.INetworkMqttConfig;
 import lv.cecilutaka.cdtmanager2.api.server.config.INetworkMySQLConfig;
 import lv.cecilutaka.cdtmanager2.api.server.config.INetworkWebServiceConfig;
+import lv.cecilutaka.cdtmanager2.api.server.database.IDatabase;
 import lv.cecilutaka.cdtmanager2.api.server.mqtt.*;
 
 public interface IServer
@@ -26,6 +27,8 @@ public interface IServer
 	IRegistry<Integer, IBridge> getBridgeRegistry();
 
 	IRegistry<String, DeviceType> getMqttDeviceTypeRegistry();
+
+	IDatabase getDatabase();
 
 	void start();
 	void stop();
