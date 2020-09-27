@@ -139,6 +139,7 @@ public class Server extends StartStopImpl implements IServer
 		webApp.stop();
 		mqttClient.disconnect();
 		mqttMessageConsumerLoop.stop();
+		database.disconnect();
 
 		Log.i("Stopped.");
 	}
