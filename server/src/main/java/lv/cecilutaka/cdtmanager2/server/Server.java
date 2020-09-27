@@ -3,7 +3,6 @@ package lv.cecilutaka.cdtmanager2.server;
 import com.typesafe.config.Config;
 
 import lv.cecilutaka.cdtmanager2.api.server.IServer;
-import lv.cecilutaka.cdtmanager2.api.server.database.IDatabase;
 import lv.cecilutaka.cdtmanager2.common.StartStopImpl;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.common.threading.Loop;
