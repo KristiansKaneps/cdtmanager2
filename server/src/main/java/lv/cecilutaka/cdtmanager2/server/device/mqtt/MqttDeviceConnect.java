@@ -38,7 +38,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 	}
 
 	@Override
-	public void consume(Server server, Mqtt5Publish publish, String mqttId) throws Exception
+	public void consume(Server server, Mqtt5Publish publish, int mqttId) throws Exception
 	{
 		byte[] payload = publish.getPayloadAsBytes();
 		if(payload.length == 0) return;
@@ -74,7 +74,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 		}*/
 	}
 
-	private IDevice handleConnectPublish(Server server, String mqttId, int fwId, String fw)
+	private IDevice handleConnectPublish(Server server, int mqttId, int fwId, String fw)
 	{
 		DeviceType type = DeviceType.fromFirmwareId(fwId);
 

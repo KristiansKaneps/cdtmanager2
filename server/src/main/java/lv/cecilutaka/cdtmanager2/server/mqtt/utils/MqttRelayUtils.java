@@ -12,13 +12,13 @@ public class MqttRelayUtils extends MqttDeviceUtils implements IMqttRelayUtils
 	}
 
 	@Override
-	public int toRelayId(String mqttRelayId) throws MqttIdException
+	public int toRelayId(int mqttRelayId) throws MqttIdException
 	{
 		return toId0(mqttRelayId);
 	}
 
 	@Override
-	public String toMqttRelayId(int relayId) throws MqttIdException
+	public int toMqttRelayId(int relayId) throws MqttIdException
 	{
 		return toMqttId0(relayId);
 	}

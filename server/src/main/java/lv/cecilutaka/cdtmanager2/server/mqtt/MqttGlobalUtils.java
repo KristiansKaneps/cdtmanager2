@@ -45,37 +45,37 @@ public class MqttGlobalUtils implements IMqttGlobalUtils
 	}
 
 	@Override
-	public int toRelayId(String mqttRelayId) throws MqttIdException
+	public int toRelayId(int mqttRelayId) throws MqttIdException
 	{
 		return relayUtils.toRelayId(mqttRelayId);
 	}
 
 	@Override
-	public String toMqttRelayId(int relayId) throws MqttIdException
+	public int toMqttRelayId(int relayId) throws MqttIdException
 	{
 		return relayUtils.toMqttRelayId(relayId);
 	}
 
 	@Override
-	public int toBridgeId(String mqttBridgeId) throws MqttIdException
+	public int toBridgeId(int mqttBridgeId) throws MqttIdException
 	{
 		return bridgeUtils.toBridgeId(mqttBridgeId);
 	}
 
 	@Override
-	public String toMqttBridgeId(int bridgeId) throws MqttIdException
+	public int toMqttBridgeId(int bridgeId) throws MqttIdException
 	{
 		return bridgeUtils.toMqttBridgeId(bridgeId);
 	}
 
 	@Override
-	public int toFloodlightId(String mqttFloodlightId) throws MqttIdException
+	public int toFloodlightId(int mqttFloodlightId) throws MqttIdException
 	{
 		return floodlightUtils.toFloodlightId(mqttFloodlightId);
 	}
 
 	@Override
-	public String toMqttFloodlightId(int floodlightId) throws MqttIdException
+	public int toMqttFloodlightId(int floodlightId) throws MqttIdException
 	{
 		return floodlightUtils.toMqttFloodlightId(floodlightId);
 	}

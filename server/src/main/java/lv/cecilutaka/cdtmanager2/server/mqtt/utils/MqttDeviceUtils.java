@@ -15,8 +15,8 @@ public abstract class MqttDeviceUtils
 	/**
 	 * MQTT ID is chip ID in HEX
 	 */
-	private final Map<String, Integer> mqttId_to_id = new HashMap<>();
-	private final Map<Integer, String> id_to_mqttId = new HashMap<>();
+	private final Map<Integer, Integer> mqttId_to_id = new HashMap<>();
+	private final Map<Integer, Integer> id_to_mqttId = new HashMap<>();
 
 	protected MqttDeviceUtils() { }
 
@@ -25,7 +25,7 @@ public abstract class MqttDeviceUtils
 		// TODO: Store ID mappings to a database or file.
 	}
 
-	protected int toId0(String mqttId) throws MqttIdException
+	protected int toId0(int mqttId) throws MqttIdException
 	{
 		synchronized (lock)
 		{
@@ -33,18 +33,18 @@ public abstract class MqttDeviceUtils
 				return mqttId_to_id.get(mqttId);
 			int id = genId++;
 			mqttId_to_id.put(mqttId, id);
-			id_to_mqttId.put((Integer) id, mqttId);
+			id_to_mqttId.put(id, mqttId);
 			Log.i("MQTT Device ID", "MQTT ID '" + mqttId + "' mapped to device ID '" + id + "'");
 			return id;
 		}
 	}
 
-	protected String toMqttId0(int id) throws MqttIdException
+	protected int toMqttId0(int id) throws MqttIdException
 	{
 		synchronized (lock)
 		{
-			if(id_to_mqttId.containsKey((Integer) id))
-				return id_to_mqttId.get((Integer) id);
+			if(id_to_mqttId.containsKey(id))
+				return id_to_mqttId.get(id);
 			throw new MqttIdException("No MQTT ID found for floodlight #" + id);
 		}
 	}

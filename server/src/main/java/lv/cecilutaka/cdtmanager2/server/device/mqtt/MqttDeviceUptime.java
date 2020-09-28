@@ -25,7 +25,7 @@ public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 	}
 
 	@Override
-	protected void consume(Server server, Mqtt5Publish publish, String mqttId) throws Exception
+	protected void consume(Server server, Mqtt5Publish publish, int mqttId) throws Exception
 	{
 		byte[] payload = publish.getPayloadAsBytes();
 

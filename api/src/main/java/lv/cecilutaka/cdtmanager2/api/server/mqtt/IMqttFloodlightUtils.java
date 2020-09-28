@@ -4,6 +4,6 @@ public interface IMqttFloodlightUtils
 {
 	void initialize();
 
-	int toFloodlightId(String mqttFloodlightId) throws MqttIdException;
-	String toMqttFloodlightId(int floodlightId) throws MqttIdException;
+	int toFloodlightId(int mqttFloodlightId) throws MqttIdException;
+	int toMqttFloodlightId(int floodlightId) throws MqttIdException;
 }

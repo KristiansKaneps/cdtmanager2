@@ -7,7 +7,7 @@ import lv.cecilutaka.cdtmanager2.common.registry.SimpleRegistryImpl;
 import java.util.Collection;
 import java.util.Set;
 
-public class MqttDeviceTypeRegistry extends SimpleRegistryImpl<String, DeviceType>
+public class MqttDeviceTypeRegistry extends SimpleRegistryImpl<Integer, DeviceType>
 {
 	public MqttDeviceTypeRegistry()
 	{
@@ -15,25 +15,25 @@ public class MqttDeviceTypeRegistry extends SimpleRegistryImpl<String, DeviceTyp
 	}
 
 	@Override
-	public synchronized void register(String key, DeviceType value)
+	public synchronized void register(Integer key, DeviceType value)
 	{
 		super.register(key, value);
 	}
 
 	@Override
-	public synchronized void unregister(String key)
+	public synchronized void unregister(Integer key)
 	{
 		super.unregister(key);
 	}
 
 	@Override
-	public synchronized RegistryValue<DeviceType> registerEmpty(String key)
+	public synchronized RegistryValue<DeviceType> registerEmpty(Integer key)
 	{
 		return super.registerEmpty(key);
 	}
 
 	@Override
-	public synchronized Set<String> getKeySet()
+	public synchronized Set<Integer> getKeySet()
 	{
 		return super.getKeySet();
 	}

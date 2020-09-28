@@ -47,11 +47,11 @@ public abstract class MqttBridgeMessageConsumer implements MqttLocalMessageConsu
 
 		try
 		{
-			String mqttBridgeId = topicLevels.get(2);
+			int mqttBridgeId = Integer.parseInt(topicLevels.get(2));
 			int bridgeId = server.getMqttUtils().toBridgeId(mqttBridgeId);
 			return new Object[]{ mqttBridgeId, bridgeId };
 		}
-		catch(MqttIdException e)
+		catch(MqttIdException | NumberFormatException e)
 		{
 			e.printStackTrace();
 		}

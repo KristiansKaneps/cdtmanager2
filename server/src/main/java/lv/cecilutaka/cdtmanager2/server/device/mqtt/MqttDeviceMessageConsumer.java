@@ -18,10 +18,11 @@ public abstract class MqttDeviceMessageConsumer implements MqttLocalMessageConsu
 			return;
 		}
 
-		String mqttId = (String) parsedTopicLevels[0];
+
 
 		try
 		{
+			int mqttId = Integer.parseInt((String) parsedTopicLevels[0]);
 			this.consume(server, publish, mqttId);
 		}
 		catch(NumberFormatException e)
@@ -34,7 +35,7 @@ public abstract class MqttDeviceMessageConsumer implements MqttLocalMessageConsu
 		}
 	}
 
-	protected abstract void consume(Server server, Mqtt5Publish publish, String mqttId) throws Exception;
+	protected abstract void consume(Server server, Mqtt5Publish publish, int mqttId) throws Exception;
 
 	@Override
 	public final Object[] parseTopicLevels(Server server, List<String> topicLevels)

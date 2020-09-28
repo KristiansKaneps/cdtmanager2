@@ -47,11 +47,11 @@ public abstract class MqttFloodlightMessageConsumer implements MqttLocalMessageC
 
 		try
 		{
-			String mqttFloodlightId = topicLevels.get(2);
+			int mqttFloodlightId = Integer.parseInt(topicLevels.get(2));
 			int floodlightId = server.getMqttUtils().toFloodlightId(mqttFloodlightId);
 			return new Object[]{ mqttFloodlightId, floodlightId };
 		}
-		catch(MqttIdException e)
+		catch(MqttIdException | NumberFormatException e)
 		{
 			e.printStackTrace();
 		}

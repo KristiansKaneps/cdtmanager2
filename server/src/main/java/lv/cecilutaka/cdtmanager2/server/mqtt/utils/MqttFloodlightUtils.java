@@ -11,12 +11,12 @@ public class MqttFloodlightUtils extends MqttDeviceUtils implements IMqttFloodli
 		initialize0();
 	}
 
-	public int toFloodlightId(String mqttFloodlightId) throws MqttIdException
+	public int toFloodlightId(int mqttFloodlightId) throws MqttIdException
 	{
 		return toId0(mqttFloodlightId);
 	}
 
-	public String toMqttFloodlightId(int floodlightId) throws MqttIdException
+	public int toMqttFloodlightId(int floodlightId) throws MqttIdException
 	{
 		return toMqttId0(floodlightId);
 	}

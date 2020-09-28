@@ -26,7 +26,10 @@ public interface IServer
 	IRegistry<Integer, IRelay> getRelayRegistry();
 	IRegistry<Integer, IBridge> getBridgeRegistry();
 
-	IRegistry<String, DeviceType> getMqttDeviceTypeRegistry();
+	/**
+	 * Key is device's hardware ID
+	 */
+	IRegistry<Integer, DeviceType> getMqttDeviceTypeRegistry();
 
 	IDatabase getDatabase();
 

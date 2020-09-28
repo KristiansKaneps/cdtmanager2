@@ -4,6 +4,6 @@ public interface IMqttRelayUtils
 {
 	void initialize();
 
-	int toRelayId(String mqttRelayId) throws MqttIdException;
-	String toMqttRelayId(int relayId) throws MqttIdException;
+	int toRelayId(int mqttRelayId) throws MqttIdException;
+	int toMqttRelayId(int relayId) throws MqttIdException;
 }

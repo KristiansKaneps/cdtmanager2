@@ -12,13 +12,13 @@ public class MqttBridgeUtils extends MqttDeviceUtils implements IMqttBridgeUtils
 	}
 
 	@Override
-	public int toBridgeId(String mqttBridgeId) throws MqttIdException
+	public int toBridgeId(int mqttBridgeId) throws MqttIdException
 	{
 		return toId0(mqttBridgeId);
 	}
 
 	@Override
-	public String toMqttBridgeId(int bridgeId) throws MqttIdException
+	public int toMqttBridgeId(int bridgeId) throws MqttIdException
 	{
 		return toMqttId0(bridgeId);
 	}
