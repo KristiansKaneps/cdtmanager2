@@ -10,12 +10,12 @@ import java.util.Properties;
 
 public class Database implements IDatabase
 {
-	private static final String TABLE_DEVICES = "devices";
-	//private static final String TABLE_RELAYS = "relays";
-	//private static final String TABLE_BRIDGES = "bridges";
-	private static final String TABLE_MONO_FLOODLIGHTS = "mono_floodlights";
-	private static final String TABLE_RGB_FLOODLIGHTS = "rgb_floodlights";
-	private static final String TABLE_RGB_MATRICES = "rgb_matrices";
+	public static final String TABLE_DEVICES = "devices";
+	//public static final String TABLE_RELAYS = "relays";
+	//public static final String TABLE_BRIDGES = "bridges";
+	public static final String TABLE_MONO_FLOODLIGHTS = "mono_floodlights";
+	public static final String TABLE_RGB_FLOODLIGHTS = "rgb_floodlights";
+	public static final String TABLE_RGB_MATRICES = "rgb_matrices";
 
 	private Connection connection;
 
