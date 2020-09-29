@@ -1,5 +1,6 @@
 package lv.cecilutaka.cdtmanager2.server.database;
 
+import lv.cecilutaka.cdtmanager2.api.common.device.DeviceType;
 import lv.cecilutaka.cdtmanager2.api.server.database.IDatabase;
 import lv.cecilutaka.cdtmanager2.api.server.database.ParameterCallback;
 import lv.cecilutaka.cdtmanager2.server.Server;
@@ -62,12 +63,12 @@ public class Database implements IDatabase
 	public synchronized void createTables() throws SQLException
 	{
 		_stmt("CREATE TABLE IF NOT EXISTS " + TABLE_DEVICES + "("
-		      + "  id              INT UNSIGNED NOT NULL AUTO_INCREMENT UNIQUE,"
-		      + "  firmware_type   SMALLINT UNSIGNED NOT NULL,"
+		      + "  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,"
+		      + "  firmware_type   SMALLINT UNSIGNED DEFAULT " + DeviceType.UNKNOWN.getTypeId() + ","
 		      + "  firmware        VARCHAR(48) NULL CHARACTER SET ascii COLLATE ascii_general_ci,"
 		      + "  hardware_id     INT UNSIGNED NOT NULL UNIQUE,"
 		      + "  uptime          INT DEFAULT 0,"
-		      + "  connected       BOOL default 0,"
+		      + "  connected       BOOL DEFAULT 0,"
 		      + "  PRIMARY KEY (id)"
 		      + ") ENGINE=INNODB  DEFAULT CHARSET=utf8;"
 		);

@@ -11,6 +11,9 @@ import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.Server;
+import lv.cecilutaka.cdtmanager2.server.database.objects.BridgeDAO;
+import lv.cecilutaka.cdtmanager2.server.database.objects.DeviceDAO;
+import lv.cecilutaka.cdtmanager2.server.database.objects.RelayDAO;
 import lv.cecilutaka.cdtmanager2.server.json.DeviceUptimeFactory;
 import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
@@ -50,20 +53,44 @@ public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 		{
 			case RELAY:
 			{
-				RegistryValue<IRelay> r = server.getRelayRegistry().get(server.getMqttUtils().toRelayId(mqttId));
-				if (!r.isEmpty()) r.get().setUptime(uptimeInSeconds);
+				var dao = new RelayDAO(server.getDatabase());
+				dao.useHardwareIdAsKey(true);
+				dao.hardwareId = mqttId;
+				dao.getId();
+				RegistryValue<IRelay> r = server.getRelayRegistry().get(dao.id);
+				if (!r.isEmpty())
+				{
+					r.get().setUptime(uptimeInSeconds);
+					r.get().setConnected(true);
+				}
 			} break;
 			case BRIDGE:
 			{
-				RegistryValue<IBridge> r = server.getBridgeRegistry().get(server.getMqttUtils().toBridgeId(mqttId));
-				if(!r.isEmpty()) r.get().setUptime(uptimeInSeconds);
+				var dao = new BridgeDAO(server.getDatabase());
+				dao.useHardwareIdAsKey(true);
+				dao.hardwareId = mqttId;
+				dao.getId();
+				RegistryValue<IBridge> r = server.getBridgeRegistry().get(dao.id);
+				if(!r.isEmpty())
+				{
+					r.get().setUptime(uptimeInSeconds);
+					r.get().setConnected(true);
+				}
 			}  break;
 			case MONO_FLOODLIGHT:
 			case RGB_FLOODLIGHT:
 			case RGB_MATRIX:
 			{
-				RegistryValue<IFloodlight> r = server.getFloodlightRegistry().get(server.getMqttUtils().toFloodlightId(mqttId));
-				if(!r.isEmpty()) r.get().setUptime(uptimeInSeconds);
+				var dao = new DeviceDAO(server.getDatabase());
+				dao.useHardwareIdAsKey(true);
+				dao.hardwareId = mqttId;
+				dao.getId();
+				RegistryValue<IFloodlight> r = server.getFloodlightRegistry().get(dao.id);
+				if(!r.isEmpty())
+				{
+					r.get().setUptime(uptimeInSeconds);
+					r.get().setConnected(true);
+				}
 			} break;
 			default:
 				return;

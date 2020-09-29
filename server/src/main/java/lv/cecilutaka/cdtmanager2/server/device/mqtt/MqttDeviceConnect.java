@@ -12,10 +12,10 @@ import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IRGBFloodlight;
 import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceFirmwareMessage;
 import lv.cecilutaka.cdtmanager2.api.common.device.matrix.IRGBMatrix;
 import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
-import lv.cecilutaka.cdtmanager2.api.server.mqtt.MqttIdException;
 import lv.cecilutaka.cdtmanager2.common.device.FirmwareInfo;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.Server;
+import lv.cecilutaka.cdtmanager2.server.database.objects.*;
 import lv.cecilutaka.cdtmanager2.server.device.bridge.Bridge;
 import lv.cecilutaka.cdtmanager2.server.device.bridge.Relay;
 import lv.cecilutaka.cdtmanager2.server.device.floodlight.Floodlight;
@@ -25,7 +25,7 @@ import lv.cecilutaka.cdtmanager2.server.json.DeviceFirmwareMessageFactory;
 import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 
 /**
- * Connect counts as a firmware publish
+ * Connect counts as a firmware publish.
  */
 @ConsumeMqttMessage(subscriptionId = 0)
 public class MqttDeviceConnect extends MqttDeviceMessageConsumer
@@ -80,124 +80,153 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 
 		server.getMqttDeviceTypeRegistry().register(mqttId, type);
 
-		try
+		var devObj = new DeviceDAO(server.getDatabase());
+		devObj.useHardwareIdAsKey(true);
+		devObj.hardwareId = mqttId;
+		devObj.firmwareType = fwId;
+		devObj.firmware = fw;
+		devObj.connected = true;
+		devObj.uptime = 0;
+		devObj.update();
+		devObj.getId();
+
+		switch (type)
 		{
-			switch (type)
+			case RELAY:
 			{
-				case RELAY:
+				RegistryValue<IRelay> regValue = server.getRelayRegistry().get(devObj.id);
+				IRelay relay;
+
+				RelayDAO relayObj = devObj.asRelay();
+				relayObj.update();
+
+				if(regValue.isEmpty())
 				{
-					int relayId = server.getMqttUtils().toRelayId(mqttId);
-					RegistryValue<IRelay> regValue = server.getRelayRegistry().get(relayId);
-					IRelay relay;
-
-					if(regValue.isEmpty())
-					{
-						relay = new Relay(relayId);
-						relay.setFirmwareInfo(new FirmwareInfo(type, fw));
-						regValue.set(relay);
-					}
-					else
-					{
-						relay = regValue.get();
-						relay.setId(relayId);
-						relay.setFirmwareInfo(new FirmwareInfo(type, fw));
-					}
-
-					return relay;
+					relay = new Relay(devObj.id);
+					relay.setFirmwareInfo(new FirmwareInfo(type, fw));
+					relay.setConnected(true);
+					regValue.set(relay);
 				}
-				case BRIDGE:
+				else
 				{
-					int bridgeId = server.getMqttUtils().toBridgeId(mqttId);
-					RegistryValue<IBridge> regValue = server.getBridgeRegistry().get(bridgeId);
-					IBridge bridge;
-
-					if(regValue.isEmpty())
-					{
-						bridge = new Bridge(bridgeId);
-						bridge.setFirmwareInfo(new FirmwareInfo(type, fw));
-						regValue.set(bridge);
-					}
-					else
-					{
-						bridge = regValue.get();
-						bridge.setId(bridgeId);
-						bridge.setFirmwareInfo(new FirmwareInfo(type, fw));
-					}
-
-					return bridge;
+					relay = regValue.get();
+					relay.setId(devObj.id);
+					relay.setConnected(true);
+					relay.setFirmwareInfo(new FirmwareInfo(type, fw));
 				}
-				case MONO_FLOODLIGHT:
-				{
-					int floodlightId = server.getMqttUtils().toFloodlightId(mqttId);
-					RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(floodlightId);
-					IFloodlight floodlight;
 
-					if (regValue.isEmpty())
-					{
-						floodlight = new Floodlight(floodlightId);
-						floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-						regValue.set(floodlight);
-					}
-					else
-					{
-						floodlight = regValue.get();
-						floodlight.setId(floodlightId);
-						floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-					}
-
-					return floodlight;
-				}
-				case RGB_FLOODLIGHT:
-				{
-					int floodlightId = server.getMqttUtils().toFloodlightId(mqttId);
-					RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(floodlightId);
-					IRGBFloodlight floodlight;
-
-					if (regValue.isEmpty() || !(regValue.get() instanceof IRGBFloodlight))
-					{
-						floodlight = new RGBFloodlight(floodlightId);
-						floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-						regValue.set(floodlight);
-					}
-					else
-					{
-						floodlight = (IRGBFloodlight) regValue.get();
-						floodlight.setId(floodlightId);
-						floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-					}
-
-					return floodlight;
-				}
-				case RGB_MATRIX:
-				{
-					int floodlightId = server.getMqttUtils().toFloodlightId(mqttId);
-					RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(floodlightId);
-					IRGBMatrix floodlight;
-
-					if(regValue.isEmpty() || !(regValue.get() instanceof IRGBMatrix))
-					{
-						floodlight = new RGBMatrix(floodlightId);
-						floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-						regValue.set(floodlight);
-					}
-					else
-					{
-						floodlight = (IRGBMatrix) regValue.get();
-						floodlight.setId(floodlightId);
-						floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-					}
-
-					return floodlight;
-				}
-				default: return null;
-
+				return relay;
 			}
-		}
-		catch(MqttIdException e)
-		{
-			Log.w("MQTT", "A device sent an invalid MQTT ID: '" + mqttId + "'");
-		}
+			case BRIDGE:
+			{
+				RegistryValue<IBridge> regValue = server.getBridgeRegistry().get(devObj.id);
+				IBridge bridge;
 
-		return null;
+				BridgeDAO bridgeObj = devObj.asBridge();
+				bridgeObj.update();
+
+				if(regValue.isEmpty())
+				{
+					bridge = new Bridge(devObj.id);
+					bridge.setFirmwareInfo(new FirmwareInfo(type, fw));
+					bridge.setConnected(true);
+					regValue.set(bridge);
+				}
+				else
+				{
+					bridge = regValue.get();
+					bridge.setId(devObj.id);
+					bridge.setConnected(true);
+					bridge.setFirmwareInfo(new FirmwareInfo(type, fw));
+				}
+
+				return bridge;
+			}
+			case MONO_FLOODLIGHT:
+			{
+				RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(devObj.id);
+				IFloodlight floodlight;
+
+				MonoFloodlightDAO fldlObj = devObj.asMonoFloodlight();
+				fldlObj.flags = 0;
+				fldlObj.flags = 0;
+				fldlObj.update();
+
+				if (regValue.isEmpty())
+				{
+					floodlight = new Floodlight(devObj.id);
+					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
+					floodlight.setConnected(true);
+					regValue.set(floodlight);
+				}
+				else
+				{
+					floodlight = regValue.get();
+					floodlight.setId(devObj.id);
+					floodlight.setConnected(true);
+					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
+				}
+
+				return floodlight;
+			}
+			case RGB_FLOODLIGHT:
+			{
+				RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(devObj.id);
+				IRGBFloodlight floodlight;
+
+				RGBFloodlightDAO fldlObj = devObj.asRGBFloodlight();
+				fldlObj.flags = 0;
+				fldlObj.color = 0;
+				fldlObj.fx = 0;
+				fldlObj.update();
+
+				if (regValue.isEmpty() || !(regValue.get() instanceof IRGBFloodlight))
+				{
+					floodlight = new RGBFloodlight(devObj.id);
+					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
+					floodlight.setConnected(true);
+					regValue.set(floodlight);
+				}
+				else
+				{
+					floodlight = (IRGBFloodlight) regValue.get();
+					floodlight.setId(devObj.id);
+					floodlight.setConnected(true);
+					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
+				}
+
+				return floodlight;
+			}
+			case RGB_MATRIX:
+			{
+				RegistryValue<IFloodlight> regValue = server.getFloodlightRegistry().get(devObj.id);
+				IRGBMatrix floodlight;
+
+				RGBMatrixDAO matrixObj = devObj.asRGBMatrix();
+				matrixObj.flags = 0;
+				matrixObj.color = 0;
+				matrixObj.fx = 0;
+				matrixObj.update();
+
+				if(regValue.isEmpty() || !(regValue.get() instanceof IRGBMatrix))
+				{
+					floodlight = new RGBMatrix(devObj.id);
+					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
+					floodlight.setConnected(true);
+					regValue.set(floodlight);
+				}
+				else
+				{
+					floodlight = (IRGBMatrix) regValue.get();
+					floodlight.setId(devObj.id);
+					floodlight.setConnected(true);
+					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
+				}
+
+				return floodlight;
+			}
+			default: return null;
+
+		}
 	}
 }

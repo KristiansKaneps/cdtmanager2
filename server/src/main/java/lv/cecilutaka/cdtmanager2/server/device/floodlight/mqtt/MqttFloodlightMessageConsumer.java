@@ -2,10 +2,10 @@ package lv.cecilutaka.cdtmanager2.server.device.floodlight.mqtt;
 
 import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
-import lv.cecilutaka.cdtmanager2.api.server.mqtt.MqttIdException;
 import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.Server;
+import lv.cecilutaka.cdtmanager2.server.database.objects.DeviceDAO;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttLocalMessageConsumer;
 
 import java.util.List;
@@ -48,10 +48,13 @@ public abstract class MqttFloodlightMessageConsumer implements MqttLocalMessageC
 		try
 		{
 			int mqttFloodlightId = Integer.parseInt(topicLevels.get(2));
-			int floodlightId = server.getMqttUtils().toFloodlightId(mqttFloodlightId);
-			return new Object[]{ mqttFloodlightId, floodlightId };
+			DeviceDAO f = new DeviceDAO(server.getDatabase());
+			f.useHardwareIdAsKey(true);
+			f.hardwareId = mqttFloodlightId;
+			f.getId();
+			return new Object[]{ mqttFloodlightId, f.id };
 		}
-		catch(MqttIdException | NumberFormatException e)
+		catch(NumberFormatException e)
 		{
 			e.printStackTrace();
 		}
