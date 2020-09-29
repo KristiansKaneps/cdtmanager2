@@ -20,8 +20,6 @@ public interface IServer
 	IMqttClient getMqttClient();
 	IMqttMessageConsumer getMqttMessageConsumer();
 
-	IMqttGlobalUtils getMqttUtils();
-
 	IRegistry<Integer, IFloodlight> getFloodlightRegistry();
 	IRegistry<Integer, IRelay> getRelayRegistry();
 	IRegistry<Integer, IBridge> getBridgeRegistry();

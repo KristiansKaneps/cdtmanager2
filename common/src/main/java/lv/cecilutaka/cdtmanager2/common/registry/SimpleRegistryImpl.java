@@ -6,7 +6,7 @@ import lv.cecilutaka.cdtmanager2.api.common.registry.RegistryValue;
 import java.util.*;
 
 /**
- * Simple registry implementation
+ * Simple registry implementation.
  * @param <K> key type
  * @param <V> value type
  */
@@ -18,6 +18,12 @@ public class SimpleRegistryImpl<K, V> implements IRegistry<K, V>
 	{
 		this.map = new HashMap<>();
 	}
+
+	/**
+	 * No-op.
+	 */
+	@Override
+	public void initialize() { }
 
 	@Override
 	public synchronized void register(K key, V value)

@@ -13,11 +13,7 @@ import lv.cecilutaka.cdtmanager2.server.config.NetworkWebServiceConfig;
 import lv.cecilutaka.cdtmanager2.server.database.Database;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClient;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttClientInitializer;
-import lv.cecilutaka.cdtmanager2.server.mqtt.MqttGlobalUtils;
 import lv.cecilutaka.cdtmanager2.server.mqtt.MqttMessageConsumer;
-import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttBridgeUtils;
-import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttFloodlightUtils;
-import lv.cecilutaka.cdtmanager2.server.mqtt.utils.MqttRelayUtils;
 import lv.cecilutaka.cdtmanager2.server.registry.*;
 import lv.cecilutaka.cdtmanager2.server.http.WebApplication;
 
@@ -36,8 +32,6 @@ public class Server extends StartStopImpl implements IServer
 	private Loop mqttMessageConsumerLoop;
 	private MqttMessageConsumer mqttMessageConsumer;
 	private MqttClient mqttClient;
-
-	private MqttGlobalUtils mqttUtils;
 
 	private NetworkMqttConfig netMqttConfig;
 	private NetworkWebServiceConfig netWebServiceConfig;
@@ -72,12 +66,6 @@ public class Server extends StartStopImpl implements IServer
 				.addSubRegistry(relayRegistry)
 				.addSubRegistry(bridgeRegistry);
 
-		mqttUtils = new MqttGlobalUtils(
-				new MqttRelayUtils(),
-				new MqttBridgeUtils(),
-				new MqttFloodlightUtils()
-		);
-
 		Log.i("Loading config...");
 		Config networkConfig = configLoader.load("network.conf");
 
@@ -110,10 +98,14 @@ public class Server extends StartStopImpl implements IServer
 			System.exit(1);
 		}
 
+		mqttDeviceTypeRegistry.initialize();
+		floodlightRegistry.initialize();
+		relayRegistry.initialize();
+		bridgeRegistry.initialize();
+		_deviceReadOnlyRegistry.initialize();
+
 		mqttClient = new MqttClient(this);
 		mqttClient.addConnectionListener(new MqttClientInitializer(this));
-
-		mqttUtils.initialize();
 
 		mqttMessageConsumerLoop = new Loop(
 				mqttMessageConsumer = new MqttMessageConsumer(this, false),
@@ -172,12 +164,6 @@ public class Server extends StartStopImpl implements IServer
 	public MqttMessageConsumer getMqttMessageConsumer()
 	{
 		return mqttMessageConsumer;
-	}
-
-	@Override
-	public MqttGlobalUtils getMqttUtils()
-	{
-		return mqttUtils;
 	}
 
 	@Override
