@@ -6,6 +6,7 @@ import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IRGBFloodlight;
 public class RGBFloodlightImpl extends FloodlightImpl implements IRGBFloodlight
 {
 	protected final FloodlightColor color = new FloodlightColor();
+	protected byte fx = 0;
 
 	public RGBFloodlightImpl(int id)
 	{
@@ -16,6 +17,18 @@ public class RGBFloodlightImpl extends FloodlightImpl implements IRGBFloodlight
 	public FloodlightColor getColor()
 	{
 		return color;
+	}
+
+	@Override
+	public byte getFX()
+	{
+		return fx;
+	}
+
+	@Override
+	public void setFX(byte fx)
+	{
+		this.fx = fx;
 	}
 
 	@Override

@@ -9,9 +9,16 @@ public interface IRGBFloodlight extends IFloodlight
 	 */
 	FloodlightColor getColor();
 
+	/**
+	 * @return FX
+	 */
+	byte getFX();
+
 	default void setColor(FloodlightColor color) { getColor().copyFrom(color); }
 	default void setColor(int rgba) { getColor().setRGBA(rgba); }
 	default void setColor(int r, int g, int b, int a) { getColor().setRGBA(r, g, b, a); }
+
+	void setFX(byte fx);
 
 	/**
 	 * @return color's alpha channel
