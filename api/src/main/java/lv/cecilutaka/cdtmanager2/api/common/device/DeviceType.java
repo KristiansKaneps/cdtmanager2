@@ -35,7 +35,7 @@ public enum DeviceType
 	}
 
 	/**
-	 * Same as {@code getTypeId()}
+	 * Same as {@link DeviceType#getTypeId()}
 	 * @return firmware ID
 	 */
 	public int getFirmwareId()
@@ -54,7 +54,7 @@ public enum DeviceType
 	}
 
 	/**
-	 * Same as {@code fromTypeId(firmwareId)}
+	 * Same as {@link DeviceType#fromTypeId(int)}
 	 * @param firmwareId - firmware ID
 	 * @return corresponding device type
 	 */
