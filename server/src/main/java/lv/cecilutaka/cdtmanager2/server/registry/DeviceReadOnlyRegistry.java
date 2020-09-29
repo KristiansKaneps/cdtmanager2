@@ -21,6 +21,12 @@ public class DeviceReadOnlyRegistry implements IRegistry<Integer, IDevice>
 		return this;
 	}
 
+	@Override
+	public void initialize()
+	{
+
+	}
+
 	/**
 	 * No-op.
 	 */
