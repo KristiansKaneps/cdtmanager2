@@ -1,3 +1,6 @@
+targetCompatibility = 10
+sourceCompatibility = 10
+
 dependencies {
     implementation project(':common'), project(':api')
 
