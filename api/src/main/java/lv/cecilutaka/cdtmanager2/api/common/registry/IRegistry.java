@@ -4,12 +4,17 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Registry map
+ * Registry map.
  * @param <K> key type
  * @param <V> value type
  */
 public interface IRegistry<K, V>
 {
+	/**
+	 * Registry instantiation.
+	 */
+	void initialize();
+
 	void register(K key, V value);
 	void unregister(K key);
 
