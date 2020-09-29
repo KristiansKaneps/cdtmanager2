@@ -6,6 +6,8 @@ import lv.cecilutaka.cdtmanager2.api.common.device.floodlight.IFloodlight;
 
 public class FloodlightImpl implements IFloodlight
 {
+	protected boolean connected = false;
+
 	protected long lastUptimeReport;
 
 	protected IDeviceMessage message;
@@ -86,6 +88,18 @@ public class FloodlightImpl implements IFloodlight
 	public long getLastUptimeReport()
 	{
 		return lastUptimeReport;
+	}
+
+	@Override
+	public boolean isConnected()
+	{
+		return connected;
+	}
+
+	@Override
+	public void setConnected(boolean connected)
+	{
+		this.connected = connected;
 	}
 
 	protected String _toStringPart0()

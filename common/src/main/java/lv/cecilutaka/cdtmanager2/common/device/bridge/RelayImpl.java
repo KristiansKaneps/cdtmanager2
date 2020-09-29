@@ -6,6 +6,8 @@ import lv.cecilutaka.cdtmanager2.api.common.device.bridge.IRelay;
 
 public class RelayImpl implements IRelay
 {
+	protected boolean connected = false;
+
 	protected long lastUptimeReport;
 
 	protected IDeviceMessage message;
@@ -73,6 +75,18 @@ public class RelayImpl implements IRelay
 	public long getLastUptimeReport()
 	{
 		return lastUptimeReport;
+	}
+
+	@Override
+	public boolean isConnected()
+	{
+		return connected;
+	}
+
+	@Override
+	public void setConnected(boolean connected)
+	{
+		this.connected = connected;
 	}
 
 	protected String _toStringPart0()

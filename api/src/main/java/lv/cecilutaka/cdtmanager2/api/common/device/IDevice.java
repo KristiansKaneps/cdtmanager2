@@ -23,4 +23,7 @@ public interface IDevice
 	void setUptime(int seconds);
 
 	long getLastUptimeReport();
+
+	boolean isConnected();
+	void setConnected(boolean connected);
 }
