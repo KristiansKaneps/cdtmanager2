@@ -22,7 +22,7 @@ subprojects {
 			}
 
 			dependencies {
-				classpath 'com.android.tools.build:gradle:4.0.0'
+				classpath 'com.android.tools.build:gradle:4.0.2'
 			}
 		}
 	} else if(project.getName().endsWith("firmware")) {
@@ -30,10 +30,10 @@ subprojects {
 	} else {
 		apply plugin: 'java'
 		apply plugin: 'idea'
-		if(!project.getName().endsWith("api") && project.getName() != "common")
+		if(!project.getName().endsWith("api") && !"common".equalsIgnoreCase(project.getName()))
 			apply plugin: 'application'
 
-		sourceCompatibility = JavaVersion.VERSION_1_8
+		sourceCompatibility = JavaVersion.VERSION_1_10
 		version = '1.0'
 
 		test {
