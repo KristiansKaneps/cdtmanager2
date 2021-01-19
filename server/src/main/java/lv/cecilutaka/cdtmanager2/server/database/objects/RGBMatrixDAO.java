@@ -42,7 +42,9 @@ public class RGBMatrixDAO extends RGBFloodlightDAO
 
 	protected final String rgbMatricesTable = Database.TABLE_RGB_MATRICES;
 
-	protected final SingleParameterCallback[] rgbFloodlightsValues = { };
+	protected final SingleParameterCallback[] rgbMatricesValue = {
+			s -> s.setInt(1, id)
+	};
 
 	public RGBMatrixDAO(Database database)
 	{
@@ -58,7 +60,13 @@ public class RGBMatrixDAO extends RGBFloodlightDAO
 
 	public void updateRGBMatrixData()
 	{
-
+		database.update(
+				rgbMatricesTable,
+				"id",
+				"?",
+				1,
+				rgbMatricesValue
+		);
 	}
 
 	@Override
