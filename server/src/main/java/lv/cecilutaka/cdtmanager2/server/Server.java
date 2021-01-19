@@ -70,7 +70,7 @@ public class Server extends StartStopImpl implements IServer
 		Config networkConfig = configLoader.load("network.conf");
 
 		netMqttConfig = configLoader.load(networkConfig.getConfig("mqtt"), NetworkMqttConfig.class);
-		netWebServiceConfig = configLoader.load(networkConfig.getConfig("webservice"), NetworkWebServiceConfig.class);
+		netWebServiceConfig = configLoader.load(networkConfig.getConfig("http"), NetworkWebServiceConfig.class);
 		netMySqlConfig = configLoader.load(networkConfig.getConfig("mysql"), NetworkMySQLConfig.class);
 
 		Log.i("Config loaded:");
