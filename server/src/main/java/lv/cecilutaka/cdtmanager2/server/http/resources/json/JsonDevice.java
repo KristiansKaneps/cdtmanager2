@@ -6,10 +6,12 @@ public class JsonDevice
 {
 	public JsonFirmware firmware;
 	public int uptime;
+	public boolean connected;
 
 	public JsonDevice(IDevice device)
 	{
 		firmware = new JsonFirmware(device.getFirmwareInfo());
 		uptime = device.getUptime();
+		connected = device.isConnected();
 	}
 }
