@@ -30,6 +30,8 @@ import lv.cecilutaka.cdtmanager2.server.mqtt.ConsumeMqttMessage;
 @ConsumeMqttMessage(subscriptionId = 0)
 public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 {
+	private static final boolean DEFAULT_CONNECTED = false;
+
 	private final ObjectMapper mapper = new ObjectMapper();
 
 	public MqttDeviceConnect()
@@ -85,7 +87,7 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 		devObj.hardwareId = mqttId;
 		devObj.firmwareType = fwId;
 		devObj.firmware = fw;
-		devObj.connected = true;
+		devObj.connected = DEFAULT_CONNECTED;
 		devObj.uptime = 0;
 		devObj.update();
 		devObj.getId();
@@ -104,14 +106,14 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				{
 					relay = new Relay(devObj.id);
 					relay.setFirmwareInfo(new FirmwareInfo(type, fw));
-					relay.setConnected(true);
+					relay.setConnected(DEFAULT_CONNECTED);
 					regValue.set(relay);
 				}
 				else
 				{
 					relay = regValue.get();
 					relay.setId(devObj.id);
-					relay.setConnected(true);
+					relay.setConnected(DEFAULT_CONNECTED);
 					relay.setFirmwareInfo(new FirmwareInfo(type, fw));
 				}
 
@@ -129,14 +131,14 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				{
 					bridge = new Bridge(devObj.id);
 					bridge.setFirmwareInfo(new FirmwareInfo(type, fw));
-					bridge.setConnected(true);
+					bridge.setConnected(DEFAULT_CONNECTED);
 					regValue.set(bridge);
 				}
 				else
 				{
 					bridge = regValue.get();
 					bridge.setId(devObj.id);
-					bridge.setConnected(true);
+					bridge.setConnected(DEFAULT_CONNECTED);
 					bridge.setFirmwareInfo(new FirmwareInfo(type, fw));
 				}
 
@@ -156,14 +158,14 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				{
 					floodlight = new Floodlight(devObj.id);
 					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-					floodlight.setConnected(true);
+					floodlight.setConnected(DEFAULT_CONNECTED);
 					regValue.set(floodlight);
 				}
 				else
 				{
 					floodlight = regValue.get();
 					floodlight.setId(devObj.id);
-					floodlight.setConnected(true);
+					floodlight.setConnected(DEFAULT_CONNECTED);
 					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
 				}
 
@@ -184,14 +186,14 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				{
 					floodlight = new RGBFloodlight(devObj.id);
 					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-					floodlight.setConnected(true);
+					floodlight.setConnected(DEFAULT_CONNECTED);
 					regValue.set(floodlight);
 				}
 				else
 				{
 					floodlight = (IRGBFloodlight) regValue.get();
 					floodlight.setId(devObj.id);
-					floodlight.setConnected(true);
+					floodlight.setConnected(DEFAULT_CONNECTED);
 					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
 				}
 
@@ -212,14 +214,14 @@ public class MqttDeviceConnect extends MqttDeviceMessageConsumer
 				{
 					floodlight = new RGBMatrix(devObj.id);
 					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
-					floodlight.setConnected(true);
+					floodlight.setConnected(DEFAULT_CONNECTED);
 					regValue.set(floodlight);
 				}
 				else
 				{
 					floodlight = (IRGBMatrix) regValue.get();
 					floodlight.setId(devObj.id);
-					floodlight.setConnected(true);
+					floodlight.setConnected(DEFAULT_CONNECTED);
 					floodlight.setFirmwareInfo(new FirmwareInfo(type, fw));
 				}
 
