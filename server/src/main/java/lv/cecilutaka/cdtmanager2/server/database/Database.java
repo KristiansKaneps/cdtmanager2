@@ -45,7 +45,7 @@ public class Database implements IDatabase
 		Properties connectionProperties = new Properties();
 		connectionProperties.put("user", user);
 		connectionProperties.put("password", password);
-		DriverManager.getConnection(
+		connection = DriverManager.getConnection(
 				"jdbc:mysql://" + hostname + ":" + port + "/" + database
 					+ "?connectTimeout=0&socketTimeout=0&autoReconnect=true",
 				connectionProperties
@@ -65,7 +65,7 @@ public class Database implements IDatabase
 		_stmt("CREATE TABLE IF NOT EXISTS " + TABLE_DEVICES + "("
 		      + "  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,"
 		      + "  firmware_type   SMALLINT UNSIGNED DEFAULT " + DeviceType.UNKNOWN.getTypeId() + ","
-		      + "  firmware        VARCHAR(48) NULL CHARACTER SET ascii COLLATE ascii_general_ci,"
+		      + "  firmware        VARCHAR(48) CHARACTER SET ascii COLLATE ascii_general_ci NULL,"
 		      + "  hardware_id     INT UNSIGNED NOT NULL UNIQUE,"
 		      + "  uptime          INT DEFAULT 0,"
 		      + "  connected       BOOL DEFAULT 0,"
