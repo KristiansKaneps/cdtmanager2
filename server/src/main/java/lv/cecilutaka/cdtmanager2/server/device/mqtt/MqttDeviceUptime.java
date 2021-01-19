@@ -62,6 +62,7 @@ public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 				{
 					r.get().setUptime(uptimeInSeconds);
 					r.get().setConnected(true);
+					r.get().heartbeatReceived();
 				}
 			} break;
 			case BRIDGE:
@@ -75,6 +76,7 @@ public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 				{
 					r.get().setUptime(uptimeInSeconds);
 					r.get().setConnected(true);
+					r.get().heartbeatReceived();
 				}
 			}  break;
 			case MONO_FLOODLIGHT:
@@ -90,6 +92,7 @@ public class MqttDeviceUptime extends MqttDeviceMessageConsumer
 				{
 					r.get().setUptime(uptimeInSeconds);
 					r.get().setConnected(true);
+					r.get().heartbeatReceived();
 				}
 			} break;
 			default:

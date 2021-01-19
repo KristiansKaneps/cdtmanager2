@@ -4,6 +4,8 @@ import lv.cecilutaka.cdtmanager2.api.common.json.IDeviceMessage;
 
 public interface IDevice
 {
+	int MAX_HEARTBEAT_INTERVAL = 10000;
+
 	/**
 	 * @return local ID
 	 */
@@ -26,4 +28,5 @@ public interface IDevice
 
 	boolean isConnected();
 	void setConnected(boolean connected);
+	void heartbeatReceived();
 }

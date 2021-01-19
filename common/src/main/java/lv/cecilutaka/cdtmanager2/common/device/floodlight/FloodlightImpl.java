@@ -8,7 +8,7 @@ public class FloodlightImpl implements IFloodlight
 {
 	protected boolean connected = false;
 
-	protected long lastUptimeReport;
+	protected long lastUptimeReport, lastHeartbeat;
 
 	protected IDeviceMessage message;
 
@@ -93,13 +93,19 @@ public class FloodlightImpl implements IFloodlight
 	@Override
 	public boolean isConnected()
 	{
-		return connected;
+		return connected && System.currentTimeMillis() - lastHeartbeat <= MAX_HEARTBEAT_INTERVAL;
 	}
 
 	@Override
 	public void setConnected(boolean connected)
 	{
 		this.connected = connected;
+	}
+
+	@Override
+	public void heartbeatReceived()
+	{
+		this.lastHeartbeat = System.currentTimeMillis();
 	}
 
 	protected String _toStringPart0()
