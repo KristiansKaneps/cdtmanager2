@@ -4,6 +4,8 @@ sourceCompatibility = 10
 dependencies {
     implementation project(':common'), project(':api')
 
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.23'
+
     implementation "org.reflections:reflections:0.9.12"
 
     implementation "com.typesafe:config:1.4.0"
