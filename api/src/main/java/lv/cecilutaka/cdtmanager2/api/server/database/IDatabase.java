@@ -2,6 +2,8 @@ package lv.cecilutaka.cdtmanager2.api.server.database;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public interface IDatabase
 {
@@ -13,12 +15,12 @@ public interface IDatabase
 	 */
 	void createTables() throws SQLException;
 
-	ResultSet execute(String query, int parameterLength, ParameterCallback parameterCallback);
-	default ResultSet execute(String query, int parameterLength, SingleParameterCallback... parameterCallbacks) {
-		return this.execute(query, parameterLength, (statement, index) -> parameterCallbacks[index].mapParameter(statement));
+	<R> R execute(Function<ResultSet, R> result, String query, int parameterLength, ParameterCallback parameterCallback);
+	default <R> R execute(Function<ResultSet, R> result, String query, int parameterLength, SingleParameterCallback... parameterCallbacks) {
+		return this.execute(result, query, parameterLength, (statement, index) -> parameterCallbacks[index].mapParameter(statement));
 	}
-	default ResultSet execute(String query) {
-		return this.execute(query, 0, (ParameterCallback) null);
+	default <R> R execute(Function<ResultSet, R> result, String query) {
+		return this.execute(result, query, 0, (ParameterCallback) null);
 	}
 
 	/**

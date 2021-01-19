@@ -280,5 +280,6 @@ public class MqttClient implements IMqttClient
 			connectionListeners.forEach(listener -> listener.onDisconnected(this));
 		}
 		Log.i("MQTT", "Disconnected from " + server.getNetworkMqttConfig().getHostname() + ":" + server.getNetworkMqttConfig().getPort());
+		Log.i("MQTT", " Context cause: " + context.getCause());
 	}
 }

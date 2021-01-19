@@ -6,7 +6,6 @@ import lv.cecilutaka.cdtmanager2.api.server.database.SingleParameterCallback;
 import lv.cecilutaka.cdtmanager2.common.log.Log;
 import lv.cecilutaka.cdtmanager2.server.database.Database;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,69 +56,74 @@ public class DeviceDAO extends DbDAO
 
 	/**
 	 * Doesn't automatically retrieve data from row. You should use {@link DeviceDAO#get()}
-	 * @param   database    {@link Database} object
-	 * @return              list of all objects in {@link Database#TABLE_DEVICES} table
+	 *
+	 * @param database {@link Database} object
+	 * @return list of all objects in {@link Database#TABLE_DEVICES} table
 	 */
 	public static List<DeviceDAO> all(Database database)
 	{
-		ResultSet result = database.execute("SELECT id FROM " + TABLE_DEVICES + ";", 0, (ParameterCallback) null);
-		if(result == null) return Collections.emptyList();
+		return database.execute(result -> {
+			if (result == null) return Collections.emptyList();
 
-		try
-		{
-			List<DeviceDAO> list = new ArrayList<>();
-
-			while(result.next())
+			try
 			{
-				DeviceDAO obj = new DeviceDAO(database);
-				obj.id = result.getInt("id");
-				obj.useHardwareIdAsKey(false);
-				list.add(obj);
+				List<DeviceDAO> list = new ArrayList<>();
+
+				while (result.next())
+				{
+					DeviceDAO obj = new DeviceDAO(database);
+					obj.id = result.getInt("id");
+					obj.useHardwareIdAsKey(false);
+					list.add(obj);
+				}
+
+				return Collections.unmodifiableList(list);
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				try { result.close(); } catch (SQLException ignored) { }
 			}
 
-			return Collections.unmodifiableList(list);
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try { result.close(); } catch(SQLException ignored) { }
-		}
-
-		return Collections.emptyList();
+			return Collections.emptyList();
+		}, "SELECT id FROM " + TABLE_DEVICES + ";", 0, (ParameterCallback) null);
 	}
 
 	@Override
 	public void get()
 	{
-		ResultSet result = database.execute("SELECT " + (useHardwareIdAsKey ? "id, " : "hardware_id, ") +
-		                                    "firmware_type, firmware, uptime, connected" +
-		                                    " FROM " + table + " WHERE " + (useHardwareIdAsKey ? "hardware_id" : "id") + "=?;",
-		                                    1, stmt -> stmt.setInt(1, useHardwareIdAsKey ? hardwareId : id)
-		);
-		if(result == null) return;
+		database.execute(result -> {
+							 if (result == null) return null;
 
-		try
-		{
-			if(useHardwareIdAsKey)
-				hardwareId = result.getInt("hardware_id");
-			else
-				id = result.getInt("id");
-			firmwareType = result.getInt("firmware_type");
-			firmware = result.getString("firmware");
-			uptime = result.getInt("uptime");
-			connected = result.getBoolean("connected");
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try { result.close(); } catch(SQLException ignored) { }
-		}
+							 try
+							 {
+								 if (useHardwareIdAsKey)
+									 hardwareId = result.getInt("hardware_id");
+								 else
+									 id = result.getInt("id");
+								 firmwareType = result.getInt("firmware_type");
+								 firmware = result.getString("firmware");
+								 uptime = result.getInt("uptime");
+								 connected = result.getBoolean("connected");
+							 }
+							 catch (SQLException e)
+							 {
+								 e.printStackTrace();
+							 }
+							 finally
+							 {
+								 try { result.close(); } catch (SQLException ignored) { }
+							 }
+							 return null;
+						 }, "SELECT " + (useHardwareIdAsKey ? "id, " : "hardware_id, ") +
+							"firmware_type, firmware, uptime, connected" +
+							" FROM " + table + " WHERE " + (useHardwareIdAsKey ? "hardware_id" : "id") + "=?;",
+						 1, stmt -> stmt.setInt(1, useHardwareIdAsKey ? hardwareId : id)
+		);
+
 	}
 
 	/**
@@ -127,25 +131,30 @@ public class DeviceDAO extends DbDAO
 	 */
 	public void getId()
 	{
-		ResultSet result = database.execute("SELECT id FROM " + table + " WHERE hardware_id=?;", 1, s -> s.setInt(1, hardwareId));
-		if(result == null)
-		{
-			Log.e("Device", "Could not assign device's ID from database!");
-			return;
-		}
+		database.execute(result -> {
+							 if (result == null)
+							 {
+								 Log.e("Device", "Could not assign device's ID from database!");
+								 return null;
+							 }
 
-		try
-		{
-			id = result.getInt("id");
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try { result.close(); } catch(SQLException ignored) { }
-		}
+							 try
+							 {
+								 id = result.getInt("id");
+							 }
+							 catch (SQLException e)
+							 {
+								 e.printStackTrace();
+							 }
+							 finally
+							 {
+								 try { result.close(); } catch (SQLException ignored) { }
+							 }
+							 return null;
+						 }, "SELECT id FROM " + table + " WHERE hardware_id=?;",
+						 1,
+						 s -> s.setInt(1, hardwareId));
+
 	}
 
 	/**
@@ -153,25 +162,30 @@ public class DeviceDAO extends DbDAO
 	 */
 	public void getHardwareId()
 	{
-		ResultSet result = database.execute("SELECT hardware_id FROM " + table + " WHERE id=?;", 1, s -> s.setInt(1, id));
-		if(result == null)
-		{
-			Log.e("Device", "Could not assign device's hardware ID from database!");
-			return;
-		}
+		database.execute(result -> {
+							 if (result == null)
+							 {
+								 Log.e("Device", "Could not assign device's hardware ID from database!");
+								 return null;
+							 }
 
-		try
-		{
-			hardwareId = result.getInt("hardware_id");
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try { result.close(); } catch(SQLException ignored) { }
-		}
+							 try
+							 {
+								 hardwareId = result.getInt("hardware_id");
+							 }
+							 catch (SQLException e)
+							 {
+								 e.printStackTrace();
+							 }
+							 finally
+							 {
+								 try { result.close(); } catch (SQLException ignored) { }
+							 }
+							 return null;
+						 }, "SELECT hardware_id FROM " + table + " WHERE id=?;",
+						 1,
+						 s -> s.setInt(1, id));
+
 	}
 
 	private void _copyTo(DeviceDAO dest)
@@ -186,7 +200,7 @@ public class DeviceDAO extends DbDAO
 
 	public RelayDAO asRelay()
 	{
-		if(firmwareType != DeviceType.RELAY.getTypeId())
+		if (firmwareType != DeviceType.RELAY.getTypeId())
 			return null;
 
 		RelayDAO obj = new RelayDAO(database);
@@ -197,7 +211,7 @@ public class DeviceDAO extends DbDAO
 
 	public BridgeDAO asBridge()
 	{
-		if(firmwareType != DeviceType.BRIDGE.getTypeId())
+		if (firmwareType != DeviceType.BRIDGE.getTypeId())
 			return null;
 
 		BridgeDAO obj = new BridgeDAO(database);
@@ -208,7 +222,7 @@ public class DeviceDAO extends DbDAO
 
 	public MonoFloodlightDAO asMonoFloodlight()
 	{
-		if(firmwareType != DeviceType.MONO_FLOODLIGHT.getTypeId())
+		if (firmwareType != DeviceType.MONO_FLOODLIGHT.getTypeId())
 			return null;
 
 		MonoFloodlightDAO obj = new MonoFloodlightDAO(database);
@@ -219,7 +233,7 @@ public class DeviceDAO extends DbDAO
 
 	public RGBFloodlightDAO asRGBFloodlight()
 	{
-		if(firmwareType != DeviceType.RGB_FLOODLIGHT.getTypeId())
+		if (firmwareType != DeviceType.RGB_FLOODLIGHT.getTypeId())
 			return null;
 
 		RGBFloodlightDAO obj = new RGBFloodlightDAO(database);
@@ -230,7 +244,7 @@ public class DeviceDAO extends DbDAO
 
 	public RGBMatrixDAO asRGBMatrix()
 	{
-		if(firmwareType != DeviceType.RGB_MATRIX.getTypeId())
+		if (firmwareType != DeviceType.RGB_MATRIX.getTypeId())
 			return null;
 
 		RGBMatrixDAO obj = new RGBMatrixDAO(database);

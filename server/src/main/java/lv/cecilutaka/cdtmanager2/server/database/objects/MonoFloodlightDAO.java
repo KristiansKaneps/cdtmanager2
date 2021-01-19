@@ -6,7 +6,6 @@ import lv.cecilutaka.cdtmanager2.common.device.FirmwareInfo;
 import lv.cecilutaka.cdtmanager2.common.device.floodlight.FloodlightImpl;
 import lv.cecilutaka.cdtmanager2.server.database.Database;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MonoFloodlightDAO extends DeviceDAO
@@ -80,20 +79,22 @@ public class MonoFloodlightDAO extends DeviceDAO
 
 	public void getMonoFloodlightData()
 	{
-		ResultSet result = database.execute("SELECT flags FROM " + monoFloodlightsTable + " WHERE id=?;", 1, stmt -> stmt.setInt(1, id));
-		if(result == null) return;
+		database.execute(result -> {
+			if (result == null) return null;
 
-		try
-		{
-			flags = result.getByte("flags");
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try { result.close(); } catch(SQLException ignored) { }
-		}
+			try
+			{
+				flags = result.getByte("flags");
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				try { result.close(); } catch (SQLException ignored) { }
+			}
+			return null;
+		}, "SELECT flags FROM " + monoFloodlightsTable + " WHERE id=?;", 1, stmt -> stmt.setInt(1, id));
 	}
 }

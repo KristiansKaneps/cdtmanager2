@@ -86,21 +86,24 @@ public class RGBFloodlightDAO extends MonoFloodlightDAO
 
 	public void getRGBFloodlightData()
 	{
-		ResultSet result = database.execute("SELECT color, fx FROM " + rgbFloodlightsTable + " WHERE id=?;", 1, stmt -> stmt.setInt(1, id));
-		if(result == null) return;
+		database.execute(result -> {
+			if (result == null) return null;
 
-		try
-		{
-			color = result.getInt("color");
-			fx = result.getByte("fx");
-		}
-		catch(SQLException e)
-		{
-			e.printStackTrace();
-		}
-		finally
-		{
-			try { result.close(); } catch(SQLException ignored) { }
-		}
+			try
+			{
+				color = result.getInt("color");
+				fx = result.getByte("fx");
+			}
+			catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{
+				try { result.close(); } catch (SQLException ignored) { }
+			}
+			return null;
+		}, "SELECT color, fx FROM " + rgbFloodlightsTable + " WHERE id=?;", 1, stmt -> stmt.setInt(1, id));
+
 	}
 }

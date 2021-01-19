@@ -8,6 +8,7 @@ import lv.cecilutaka.cdtmanager2.server.config.NetworkMySQLConfig;
 
 import java.sql.*;
 import java.util.Properties;
+import java.util.function.Function;
 
 public class Database implements IDatabase
 {
@@ -66,7 +67,7 @@ public class Database implements IDatabase
 		      + "  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,"
 		      + "  firmware_type   SMALLINT UNSIGNED DEFAULT " + DeviceType.UNKNOWN.getTypeId() + ","
 		      + "  firmware        VARCHAR(48) CHARACTER SET ascii COLLATE ascii_general_ci NULL,"
-		      + "  hardware_id     INT UNSIGNED NOT NULL UNIQUE,"
+		      + "  hardware_id     INT NOT NULL UNIQUE,"
 		      + "  uptime          INT DEFAULT 0,"
 		      + "  connected       BOOL DEFAULT 0,"
 		      + "  PRIMARY KEY (id)"
@@ -107,13 +108,15 @@ public class Database implements IDatabase
 	}
 
 	@Override
-	public synchronized ResultSet execute(String query, int parameterLength, ParameterCallback parameterCallback)
+	public synchronized <R> R execute(Function<ResultSet, R> result, String query, int parameterLength, ParameterCallback parameterCallback)
 	{
 		try(PreparedStatement stmt = connection.prepareStatement(query))
 		{
 			for(int i = 0; i < parameterLength; i++)
 				parameterCallback.mapParameter(stmt, i);
-			return stmt.executeQuery();
+			ResultSet set = stmt.executeQuery();
+			set.next(); // first row
+			return result.apply(set);
 		}
 		catch(SQLException e)
 		{
@@ -158,7 +161,7 @@ public class Database implements IDatabase
 		{
 			for(int i = 0; i < valueLength; i++)
 				valueCallback.mapParameter(stmt, i);
-			stmt.executeQuery();
+			stmt.executeUpdate();
 		}
 		catch(SQLException e)
 		{
